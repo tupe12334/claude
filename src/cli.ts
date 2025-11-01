@@ -2,7 +2,7 @@
 
 import { installPackage, setupCommands, setupAgents } from './index.js'
 
-async function main() {
+async function main(): Promise<void> {
   try {
     console.log('🚀 Initializing @tupe12334/claude...')
     

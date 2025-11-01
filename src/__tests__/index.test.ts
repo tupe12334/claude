@@ -25,7 +25,9 @@ describe('CLI Functions', () => {
 
       await installPackage()
 
-      expect(mockExecSync).toHaveBeenCalledWith('pnpm add cc-sdd', { stdio: 'inherit' })
+      expect(mockExecSync).toHaveBeenCalledWith('pnpm add cc-sdd', {
+        stdio: 'inherit',
+      })
     })
 
     it('should throw error if installation fails', async () => {
@@ -33,7 +35,9 @@ describe('CLI Functions', () => {
         throw new Error('Installation failed')
       })
 
-      await expect(installPackage()).rejects.toThrow('Failed to install cc-sdd package')
+      await expect(installPackage()).rejects.toThrow(
+        'Failed to install cc-sdd package'
+      )
     })
   })
 
@@ -43,7 +47,9 @@ describe('CLI Functions', () => {
 
       await setupCommands()
 
-      expect(mockMkdirSync).toHaveBeenCalledWith('.claude/command', { recursive: true })
+      expect(mockMkdirSync).toHaveBeenCalledWith('.claude/command', {
+        recursive: true,
+      })
     })
 
     it('should copy commands if package commands directory exists', async () => {
@@ -66,7 +72,9 @@ describe('CLI Functions', () => {
 
       await setupAgents()
 
-      expect(mockMkdirSync).toHaveBeenCalledWith('.claude/agents', { recursive: true })
+      expect(mockMkdirSync).toHaveBeenCalledWith('.claude/agents', {
+        recursive: true,
+      })
     })
 
     it('should copy agents if package agents directory exists', async () => {
