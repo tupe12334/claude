@@ -8,13 +8,12 @@ async function main(): Promise<void> {
 
     // Initialize cc-sdd to generate Claude Code files
     await initializeCcSdd()
-    
+
     // Setup custom commands
     await setupCommands()
-    
+
     // Setup agents
     await setupAgents()
-    
     console.log('✅ Setup complete!')
   } catch (error) {
     console.error('❌ Setup failed:', error)
