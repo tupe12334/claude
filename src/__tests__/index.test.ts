@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { execSync } from 'child_process'
 import { existsSync, mkdirSync } from 'fs'
-import { installPackage, setupCommands, setupAgents } from '../index.js'
+import { initializeCcSdd, setupCommands, setupAgents } from '../index.js'
 
 vi.mock('child_process')
 vi.mock('fs')
@@ -19,24 +19,24 @@ describe('CLI Functions', () => {
     vi.restoreAllMocks()
   })
 
-  describe('installPackage', () => {
-    it('should install cc-sdd package successfully', async () => {
+  describe('initializeCcSdd', () => {
+    it('should initialize cc-sdd using pnpm dlx successfully', async () => {
       mockExecSync.mockReturnValue(Buffer.from('success'))
 
-      await installPackage()
+      await initializeCcSdd()
 
-      expect(mockExecSync).toHaveBeenCalledWith('pnpm add cc-sdd', {
+      expect(mockExecSync).toHaveBeenCalledWith('pnpm dlx cc-sdd', {
         stdio: 'inherit',
       })
     })
 
-    it('should throw error if installation fails', async () => {
+    it('should throw error if initialization fails', async () => {
       mockExecSync.mockImplementation(() => {
-        throw new Error('Installation failed')
+        throw new Error('Initialization failed')
       })
 
-      await expect(installPackage()).rejects.toThrow(
-        'Failed to install cc-sdd package'
+      await expect(initializeCcSdd()).rejects.toThrow(
+        'Failed to initialize cc-sdd'
       )
     })
   })
