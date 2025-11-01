@@ -1,0 +1,47 @@
+{
+  "name": "@tupe12334/claude",
+  "version": "1.0.0",
+  "description": "A CLI tool that installs cc-sdd package and sets up custom commands and agents in .claude folder",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "claude": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "commands",
+    "agents"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "release": "release-it",
+    "prepare": "pnpm build"
+  },
+  "keywords": [
+    "cli",
+    "claude",
+    "cc-sdd",
+    "automation"
+  ],
+  "author": "tupe12334",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "release-it": "^17.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "cc-sdd": "latest"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
