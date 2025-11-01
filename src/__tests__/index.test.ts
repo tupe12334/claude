@@ -3,6 +3,13 @@ import { execSync } from 'child_process'
 import { existsSync, mkdirSync } from 'fs'
 import { initializeCcSdd, setupCommands, setupAgents } from '../index.js'
 
+export class TestError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'TestError'
+  }
+}
+
 vi.mock('child_process')
 vi.mock('fs')
 
@@ -33,7 +40,7 @@ describe('CLI Functions', () => {
 
     it('should throw error if initialization fails', async () => {
       mockExecSync.mockImplementation(() => {
-        throw new Error('Initialization failed')
+        throw new TestError('Initialization failed')
       })
 
       await expect(initializeCcSdd()).rejects.toThrow(
