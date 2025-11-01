@@ -2,6 +2,7 @@ import { execSync } from 'child_process'
 import { existsSync, mkdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { InitializationError } from './errors.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -20,7 +21,7 @@ export async function initializeCcSdd(): Promise<void> {
     })
     console.log('✅ cc-sdd initialized successfully')
   } catch (error) {
-    throw new Error(`Failed to initialize cc-sdd: ${error}`)
+    throw new InitializationError(`Failed to initialize cc-sdd: ${error}`)
   }
 }
 
