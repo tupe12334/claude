@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      cc-sdd:
-        specifier: latest
-        version: 1.1.5
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -624,10 +620,6 @@ packages:
   camelcase@8.0.0:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
     engines: {node: '>=16'}
-
-  cc-sdd@1.1.5:
-    resolution: {integrity: sha512-ky97zIz79f4eVbT/4xcT3/+xGGLBPAJe3CocvYIAIIpvoIcYPGG5OS2CIZ2LdcQ1cDN+7EYQcS4xUtRABuKDIg==}
-    hasBin: true
 
   chai@4.5.0:
     resolution: {integrity: sha512-RITGBfijLkBddZvnn8jdqoTypxvqbOLYQkGGxXzeFjVHvudaPw0HNFD9x928/eUwYWd2dPCugVqspGALTZZQKw==}
@@ -2384,8 +2376,6 @@ snapshots:
   callsites@3.1.0: {}
 
   camelcase@8.0.0: {}
-
-  cc-sdd@1.1.5: {}
 
   chai@4.5.0:
     dependencies:
