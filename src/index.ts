@@ -8,9 +8,16 @@ const __dirname = dirname(__filename)
 
 export async function initializeCcSdd(): Promise<void> {
   console.log('📦 Initializing cc-sdd to generate Claude Code files...')
+  console.log('📝 Auto-accepting all files except CLAUDE.md...')
 
   try {
-    execSync('pnpm dlx cc-sdd', { stdio: 'inherit' })
+    // Answer 'y' to all kiro commands (10 files) and 'n' to CLAUDE.md
+    // This automatically overwrites all .claude/commands/kiro/* files but skips CLAUDE.md
+    const responses = 'y\n'.repeat(10) + 'n\n'
+    execSync('pnpm dlx cc-sdd', {
+      input: responses,
+      stdio: ['pipe', 'inherit', 'inherit']
+    })
     console.log('✅ cc-sdd initialized successfully')
   } catch (error) {
     throw new Error(`Failed to initialize cc-sdd: ${error}`)

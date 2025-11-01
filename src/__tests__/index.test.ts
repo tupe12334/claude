@@ -20,13 +20,14 @@ describe('CLI Functions', () => {
   })
 
   describe('initializeCcSdd', () => {
-    it('should initialize cc-sdd using pnpm dlx successfully', async () => {
+    it('should initialize cc-sdd using pnpm dlx with auto-responses', async () => {
       mockExecSync.mockReturnValue(Buffer.from('success'))
 
       await initializeCcSdd()
 
       expect(mockExecSync).toHaveBeenCalledWith('pnpm dlx cc-sdd', {
-        stdio: 'inherit',
+        input: 'y\n'.repeat(10) + 'n\n',
+        stdio: ['pipe', 'inherit', 'inherit'],
       })
     })
 
