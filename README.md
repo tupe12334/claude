@@ -2,6 +2,8 @@
 
 A CLI tool that installs the `cc-sdd` package and sets up custom commands and agents in the `.claude` folder.
 
+[![CI/CD](https://github.com/tupe12334/claude/actions/workflows/ci.yml/badge.svg)](https://github.com/tupe12334/claude/actions/workflows/ci.yml)
+
 ## Installation
 
 ```bash
