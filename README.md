@@ -21,24 +21,29 @@ claude
 This will:
 
 1. 📦 Initialize `cc-sdd` using `pnpm dlx` to generate Claude Code configuration files
-2. ⚙️ Set up tupe commands in `.claude/commands/tupe/` for fixing linting issues
+2. ⚙️ Deploy `/tupe/lint` command to `.claude/commands/tupe/` for systematic ESLint error fixing
 3. 🤖 Deploy the docs-reviewer agent to `.claude/agents/` for maintaining documentation quality
 
 ## What it does
 
 - **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
-- **Tupe Commands**: Sets up specialized tupe commands in `.claude/commands/tupe/` for automated linting fixes in your codebase
+- **Tupe Lint Command**: Deploys the `/tupe/lint` command to `.claude/commands/tupe/` for systematic ESLint error fixing with continuous verification
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
 
 ## Features
 
 ### Automated Linting Fixes
 
-The tupe commands installed in `.claude/commands/tupe/` provide automated solutions for common linting issues:
+The `/tupe/lint` command provides systematic, intelligent ESLint error resolution:
 
-- Automatically detect and fix linting errors in your codebase
-- Integrate seamlessly with Claude Code's command system
-- Run fixes directly from the Claude Code interface
+- **Smart Configuration**: Automatically ensures your project uses the latest `eslint-config-agent`
+- **One-at-a-Time Fixing**: Fixes each error individually to prevent cascading issues
+- **Continuous Verification**: After each fix, runs tests and builds to ensure nothing breaks
+- **Error Prevention**: Detects and fixes any new errors introduced during the fixing process
+- **Progress Tracking**: Shows clear progress with todo list tracking
+- **Git Integration**: Commits each successful fix with descriptive messages
+
+Simply run `/tupe/lint` in Claude Code to fix all linting errors systematically while maintaining code quality.
 
 ### Documentation Quality Control
 
@@ -52,6 +57,48 @@ The included **docs-reviewer** agent ensures your documentation maintains the ri
 ### Easy Setup
 
 Simply run the `claude` command in your project directory, and all necessary configurations and commands will be set up automatically.
+
+## Usage
+
+After installation, you'll have access to powerful tupe commands in Claude Code:
+
+### `/tupe/lint` - Systematic Linting Error Fixer
+
+Fix all ESLint errors in your project systematically:
+
+```bash
+# In Claude Code, simply run:
+/tupe/lint
+```
+
+**What it does**:
+1. **Setup Phase**:
+   - Installs/updates `eslint-config-agent@latest`
+   - Creates/updates `eslint.config.mjs` with the agent config
+   - Removes any conflicting ESLint configurations
+   - Analyzes all existing linting errors
+
+2. **Fixing Phase** (for each error):
+   - Selects one error to fix
+   - Makes the minimal fix needed
+   - Runs tests to ensure they still pass
+   - Runs build to ensure it still works
+   - Checks for new linting errors
+   - Fixes any cascading errors immediately
+   - Commits the fix with descriptive message
+
+3. **Verification Phase**:
+   - Final lint check (should show 0 errors)
+   - Final test run (all must pass)
+   - Final build (must succeed)
+   - Generates completion report
+
+**Example Output**:
+```
+Fixed 15 of 47 errors (32 remaining)
+Current: src/utils/helpers.ts:42 - no-unused-vars
+Status: ✓ Tests passing ✓ Build successful ✓ No new errors
+```
 
 ## Development
 
