@@ -6,14 +6,14 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-export async function installPackage(): Promise<void> {
-  console.log('📦 Installing cc-sdd package...')
-  
+export async function initializeCcSdd(): Promise<void> {
+  console.log('📦 Initializing cc-sdd to generate Claude Code files...')
+
   try {
-    execSync('pnpm add cc-sdd', { stdio: 'inherit' })
-    console.log('✅ cc-sdd package installed successfully')
+    execSync('pnpm dlx cc-sdd', { stdio: 'inherit' })
+    console.log('✅ cc-sdd initialized successfully')
   } catch (error) {
-    throw new Error(`Failed to install cc-sdd package: ${error}`)
+    throw new Error(`Failed to initialize cc-sdd: ${error}`)
   }
 }
 

@@ -1,6 +1,6 @@
 # @tupe12334/claude
 
-A CLI tool that installs the `cc-sdd` package and sets up custom tupe commands in the `.claude` folder for automated linting fixes.
+A CLI tool that initializes `cc-sdd` and sets up custom tupe commands in the `.claude` folder for automated linting fixes and documentation quality control.
 
 [![CI/CD](https://github.com/tupe12334/claude/actions/workflows/ci.yml/badge.svg)](https://github.com/tupe12334/claude/actions/workflows/ci.yml)
 
@@ -20,13 +20,13 @@ claude
 
 This will:
 
-1. 📦 Install the `cc-sdd` package
+1. 📦 Initialize `cc-sdd` using `pnpm dlx` to generate Claude Code configuration files
 2. ⚙️ Set up tupe commands in `.claude/commands/tupe/` for fixing linting issues
 3. 🤖 Deploy the docs-reviewer agent to `.claude/agents/` for maintaining documentation quality
 
 ## What it does
 
-- **Installs cc-sdd**: Automatically installs the required `cc-sdd` package dependency
+- **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
 - **Tupe Commands**: Sets up specialized tupe commands in `.claude/commands/tupe/` for automated linting fixes in your codebase
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
 

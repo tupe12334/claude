@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-import { installPackage, setupCommands, setupAgents } from './index.js'
+import { initializeCcSdd, setupCommands, setupAgents } from './index.js'
 
 async function main(): Promise<void> {
   try {
     console.log('🚀 Initializing @tupe12334/claude...')
-    
-    // Install cc-sdd package
-    await installPackage()
+
+    // Initialize cc-sdd to generate Claude Code files
+    await initializeCcSdd()
     
     // Setup custom commands
     await setupCommands()
