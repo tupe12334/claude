@@ -16,7 +16,7 @@ export async function initializeCcSdd(): Promise<void> {
     const responses = 'y\n'.repeat(10) + 'n\n'
     execSync('pnpm dlx cc-sdd', {
       input: responses,
-      stdio: ['pipe', 'inherit', 'inherit']
+      stdio: ['pipe', 'inherit', 'inherit'],
     })
     console.log('✅ cc-sdd initialized successfully')
   } catch (error) {
@@ -26,20 +26,22 @@ export async function initializeCcSdd(): Promise<void> {
 
 export async function setupCommands(): Promise<void> {
   console.log('⚙️  Setting up custom commands...')
-  
+
   const claudeDir = '.claude'
-  const commandDir = join(claudeDir, 'command')
-  
-  // Create .claude/command directory if it doesn't exist
+  const commandDir = join(claudeDir, 'commands')
+
+  // Create .claude/commands directory if it doesn't exist
   if (!existsSync(commandDir)) {
     mkdirSync(commandDir, { recursive: true })
   }
-  
-  // Copy commands from package to .claude/command
+
+  // Copy commands from package to .claude/commands
   const packageCommandsDir = join(__dirname, '..', 'commands')
   if (existsSync(packageCommandsDir)) {
     try {
-      execSync(`cp -r ${packageCommandsDir}/* ${commandDir}/`, { stdio: 'inherit' })
+      execSync(`cp -r ${packageCommandsDir}/* ${commandDir}/`, {
+        stdio: 'inherit',
+      })
       console.log('✅ Custom commands set up successfully')
     } catch (error) {
       console.log('ℹ️  No custom commands to copy')
@@ -51,20 +53,22 @@ export async function setupCommands(): Promise<void> {
 
 export async function setupAgents(): Promise<void> {
   console.log('🤖 Setting up agents...')
-  
+
   const claudeDir = '.claude'
   const agentsDir = join(claudeDir, 'agents')
-  
+
   // Create .claude/agents directory if it doesn't exist
   if (!existsSync(agentsDir)) {
     mkdirSync(agentsDir, { recursive: true })
   }
-  
+
   // Copy agents from package to .claude/agents
   const packageAgentsDir = join(__dirname, '..', 'agents')
   if (existsSync(packageAgentsDir)) {
     try {
-      execSync(`cp -r ${packageAgentsDir}/* ${agentsDir}/`, { stdio: 'inherit' })
+      execSync(`cp -r ${packageAgentsDir}/* ${agentsDir}/`, {
+        stdio: 'inherit',
+      })
       console.log('✅ Agents set up successfully')
     } catch (error) {
       console.log('ℹ️  No agents to copy')

@@ -43,12 +43,12 @@ describe('CLI Functions', () => {
   })
 
   describe('setupCommands', () => {
-    it('should create command directory if it does not exist', async () => {
+    it('should create commands directory if it does not exist', async () => {
       mockExistsSync.mockReturnValue(false)
 
       await setupCommands()
 
-      expect(mockMkdirSync).toHaveBeenCalledWith('.claude/command', {
+      expect(mockMkdirSync).toHaveBeenCalledWith('.claude/commands', {
         recursive: true,
       })
     })
