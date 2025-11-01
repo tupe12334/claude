@@ -22,12 +22,14 @@ This will:
 
 1. 📦 Initialize `cc-sdd` using `pnpm dlx` to generate Claude Code configuration files
 2. ⚙️ Deploy `/tupe/lint` command to `.claude/commands/tupe/` for systematic ESLint error fixing
-3. 🤖 Deploy the docs-reviewer agent to `.claude/agents/` for maintaining documentation quality
+3. 🔧 Deploy the gitops agent to `.claude/agents/` for intelligent Git operations management
+4. 📝 Deploy the docs-reviewer agent to `.claude/agents/` for maintaining documentation quality
 
 ## What it does
 
 - **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
 - **Tupe Lint Command**: Deploys the `/tupe/lint` command to `.claude/commands/tupe/` for systematic ESLint error fixing with continuous verification
+- **GitOps Agent**: Deploys an intelligent Git operations manager to `.claude/agents/` that handles commits with context awareness for monorepos, polyrepos, and submodules
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
 
 ## Features
@@ -44,6 +46,18 @@ The `/tupe/lint` command provides systematic, intelligent ESLint error resolutio
 - **Git Integration**: Commits each successful fix with descriptive messages
 
 Simply run `/tupe/lint` in Claude Code to fix all linting errors systematically while maintaining code quality.
+
+### Intelligent Git Operations
+
+The **gitops** agent provides expert-level Git management with context awareness:
+
+- **Repository Intelligence**: Automatically detects monorepo, polyrepo, or submodule structures
+- **Session-Aware Commits**: Only commits files changed in the current Claude session
+- **Convention Following**: Respects repository-specific commit formats (Conventional Commits, custom formats)
+- **Safety First**: Runs comprehensive pre-commit checks (secrets, file sizes, tests, builds)
+- **Monorepo Support**: Properly scopes commits to affected packages
+- **Submodule Management**: Handles submodule commits correctly and safely
+- **Ultrathink Mode**: Analyzes thoroughly before any git operation
 
 ### Documentation Quality Control
 
