@@ -1,6 +1,6 @@
 {
   "name": "@tupe12334/claude",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool that installs cc-sdd package and sets up custom commands and agents in .claude folder",
   "type": "module",
   "main": "dist/index.js",
