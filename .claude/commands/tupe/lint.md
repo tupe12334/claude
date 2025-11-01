@@ -174,6 +174,25 @@ After all errors are fixed:
    - Any remaining warnings
    - Summary of changes made
 
+5. **Cleanup Generated Files**:
+   ```bash
+   # Remove all report files generated during the linting process
+   rm -f eslint-report.json
+   rm -f eslint-errors.txt
+   rm -f eslint-errors-*.txt
+   rm -f .eslintcache
+
+   # Show what was cleaned up
+   echo "🧹 Cleaned up generated report files"
+   ```
+
+   **Files to remove**:
+   - `eslint-report.json` - JSON error report
+   - `eslint-errors.txt` - Text error output
+   - `eslint-errors-*.txt` - Any variant error files
+   - `.eslintcache` - ESLint cache file
+   - Any other temporary files created during the process
+
 ## Important Guidelines
 
 ### DO:
@@ -225,5 +244,6 @@ You are done when:
 3. ✅ `pnpm build` completes successfully
 4. ✅ All fixes are committed
 5. ✅ Final report is generated
+6. ✅ All generated report files are cleaned up
 
 Now begin the systematic linting error fixing process!
