@@ -55,29 +55,13 @@ First, run the comprehensive project onboarding to learn everything about the pr
    - Review lock files to understand dependency state
 
 2. **Install Dependencies** (if needed):
-   - For Node.js projects:
-     ```bash
-     # Use the appropriate package manager
-     npm install
-     # or
-     pnpm install
-     # or
-     yarn install
-     ```
-   - For Python projects:
-     ```bash
-     pip install -r requirements.txt
-     # or
-     poetry install
-     ```
-   - For Rust projects:
-     ```bash
-     cargo build
-     ```
-   - For Go projects:
-     ```bash
-     go mod download
-     ```
+   - Analyze the project from Phase 1 onboarding to understand:
+     - What package manager is used (check lock files, package.json scripts, documentation)
+     - What dependency files exist (package.json, requirements.txt, Cargo.toml, go.mod, etc.)
+     - Whether dependencies are already installed (node_modules/, venv/, target/, etc.)
+   - Determine the correct installation command based on your analysis
+   - Execute the appropriate command to install dependencies
+   - Verify installation was successful
 
 3. **Environment Configuration**:
    - Check if .env file exists

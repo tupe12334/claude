@@ -9,10 +9,12 @@
     "onboard",
     "onboarding",
     "pnpm",
+    "Procfile",
     "pyproject",
     "subagent",
     "tupe",
     "ultrathink",
+    "venv",
     "vitest"
   ],
   "ignorePaths": [
