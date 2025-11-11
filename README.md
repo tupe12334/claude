@@ -23,6 +23,7 @@ This will:
 1. 📦 Initialize `cc-sdd` using `pnpm dlx` to generate Claude Code configuration files
 2. ⚙️ Deploy tupe commands to `.claude/commands/tupe/`:
    - `/tupe:container-pr` - Containerized development with automatic PR creation
+   - `/tupe:package-setup` - Initialize or validate package configuration
    - `/tupe:lint` - Systematic ESLint error fixing
    - `/tupe:boot` - Project onboarding with service boot
    - `/tupe:project-onboard` - Comprehensive codebase learning
@@ -33,8 +34,9 @@ This will:
 ## What it does
 
 - **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
-- **Tupe Commands Suite**: Deploys 9 specialized commands to `.claude/commands/tupe/`:
+- **Tupe Commands Suite**: Deploys 10 specialized commands to `.claude/commands/tupe/`:
   - **container-pr**: Execute work in isolated Docker containers with automatic PR creation
+  - **package-setup**: Initialize or validate package configuration with pnpm, vitest, and CI/CD
   - **lint**: Systematic ESLint error fixing with continuous verification
   - **boot**: Project onboarding with service initialization
   - **project-onboard**: Comprehensive codebase exploration and learning
@@ -163,7 +165,103 @@ Execute work in isolated Docker containers to enable multiple agents working sim
 - **Reproducible**: Same container environment every time
 - **Secure**: Credentials passed safely via environment variables
 
-### `/tupe/lint` - Systematic Linting Error Fixer
+### `/tupe:package-setup` - Package Configuration Manager
+
+Initialize or validate package setup with correct configuration for publishing, CI/CD, testing, and building:
+
+```bash
+# In Claude Code, simply run:
+/tupe:package-setup
+```
+
+**What it does**:
+
+Handles two scenarios:
+1. **Publishable Packages**: Full setup with npm publishing, release-it, CI/CD with publish step
+2. **Internal Packages**: Setup without publishing, CI/CD with tests/builds only
+
+**Setup includes**:
+1. **Package Configuration**:
+   - Creates or validates package.json with correct ES module setup
+   - Ensures proper `main`, `types`, `exports` fields
+   - Sets up all necessary scripts (build, test, lint, format)
+   - Configures `publishConfig` for npm (if publishable)
+
+2. **TypeScript Setup**:
+   - Creates tsconfig.json with strict mode
+   - Configures for declaration file generation
+   - Sets up proper module resolution
+
+3. **Testing Configuration** (if needed):
+   - Installs and configures vitest
+   - Creates vitest.config.ts with coverage setup
+   - Sets up example test structure
+
+4. **Linting and Formatting**:
+   - Installs ESLint@latest with eslint-config-agent@latest (ONLY config needed)
+   - Sets up Prettier with consistent style
+   - Configures cspell for spell checking
+   - Creates .prettierignore
+
+5. **Git Hooks (Husky + lint-staged)**:
+   - Installs and initializes Husky
+   - Creates pre-commit hook (runs lint-staged on staged files)
+   - Creates pre-push hook (runs lint, format, spell, tests)
+   - Configures lint-staged for automatic fixing
+   - Ensures code quality before commits and pushes
+
+6. **Release Management** (publishable only):
+   - Installs release-it
+   - Creates .release-it.json configuration
+   - Sets up release script
+
+7. **CI/CD Pipeline**:
+   - Creates GitHub Actions workflow
+   - Tests on Node 18, 20, 22
+   - Runs lint, format check, tests, and build
+   - Auto-publishes to npm (if publishable)
+   - Or just runs tests/builds (if internal)
+
+8. **Project Structure**:
+   - Creates src/ directory with example code
+   - Sets up .gitignore
+   - Validates gh CLI setup
+
+**Example usage scenarios**:
+
+```text
+Scenario 1: New publishable library
+→ /tupe:package-setup
+→ Answers: Publishable? Yes, Build? Yes, Tests? Yes
+→ Result: Full setup with npm publishing
+
+Scenario 2: Internal monorepo package
+→ /tupe:package-setup
+→ Answers: Publishable? No, Build? Yes, Tests? Yes
+→ Result: Setup with CI/CD but no publishing
+
+Scenario 3: Validate existing package
+→ /tupe:package-setup
+→ Validates all configs and fixes issues
+```
+
+**Validation checklist**:
+- ✅ package.json with ES modules and correct fields
+- ✅ TypeScript configuration with strict mode
+- ✅ Testing setup with vitest
+- ✅ ESLint with eslint-config-agent@latest (ONLY config)
+- ✅ Prettier and cspell configured
+- ✅ Husky git hooks (pre-commit, pre-push)
+- ✅ lint-staged for automatic fixing
+- ✅ CI/CD workflow working
+- ✅ Release configuration (if publishable)
+- ✅ GitHub secrets verified (if publishable)
+
+**Git hooks ensure**:
+- 🔒 Pre-commit: Auto-fix linting, formatting, spelling on staged files
+- 🔒 Pre-push: Full validation (lint, format, spell, tests) before pushing
+
+### `/tupe:lint` - Systematic Linting Error Fixer
 
 Fix all ESLint errors in your project systematically:
 
