@@ -21,18 +21,57 @@ claude
 This will:
 
 1. 📦 Initialize `cc-sdd` using `pnpm dlx` to generate Claude Code configuration files
-2. ⚙️ Deploy `/tupe/lint` command to `.claude/commands/tupe/` for systematic ESLint error fixing
+2. ⚙️ Deploy tupe commands to `.claude/commands/tupe/`:
+   - `/tupe:container-pr` - Containerized development with automatic PR creation
+   - `/tupe:lint` - Systematic ESLint error fixing
+   - `/tupe:boot` - Project onboarding with service boot
+   - `/tupe:project-onboard` - Comprehensive codebase learning
+   - And more specialized workflow commands
 3. 🔧 Deploy the gitops agent to `.claude/agents/` for intelligent Git operations management
 4. 📝 Deploy the docs-reviewer agent to `.claude/agents/` for maintaining documentation quality
 
 ## What it does
 
 - **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
-- **Tupe Lint Command**: Deploys the `/tupe/lint` command to `.claude/commands/tupe/` for systematic ESLint error fixing with continuous verification
+- **Tupe Commands Suite**: Deploys 9 specialized commands to `.claude/commands/tupe/`:
+  - **container-pr**: Execute work in isolated Docker containers with automatic PR creation
+  - **lint**: Systematic ESLint error fixing with continuous verification
+  - **boot**: Project onboarding with service initialization
+  - **project-onboard**: Comprehensive codebase exploration and learning
+  - **commit-push**: Smart git operations for session changes
+  - **ultrathink**: Deep thinking mode for complex tasks
+  - **validate-feature**: Feature validation with comprehensive testing
+  - **implement-and-validate**: Full TDD implementation cycle
+  - **lib-opportunities**: Analyze for npm package replacement opportunities
 - **GitOps Agent**: Deploys an intelligent Git operations manager to `.claude/agents/` that handles commits with context awareness for monorepos, polyrepos, and submodules
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
 
 ## Features
+
+### Concurrent Multi-Agent Workflows
+
+The **container-pr** command enables **multiple Claude agents to work simultaneously** on different tasks:
+
+**Key Innovation**: Run several agents in parallel, each in an isolated container, without any conflicts.
+
+**Use Case**: Start multiple Claude Code sessions (or agents) working on different features:
+
+- Agent 1: Adding authentication → PR #123
+- Agent 2: Updating dependencies → PR #124
+- Agent 3: Optimizing queries → PR #125
+- All running at the same time without interfering!
+
+**Features**:
+
+- **True Parallelism**: Multiple agents work concurrently, not sequentially
+- **Complete Isolation**: Each agent in its own Docker container with clean environment
+- **Multi-Language**: Auto-detects Node.js, Python, Go, and more
+- **Secure Credentials**: GitHub and npm tokens passed safely via env vars
+- **Auto-PR Creation**: Each agent creates its own pull request
+- **Zero Conflicts**: No interference between agents or with host system
+- **Clean Workflows**: Automatic cleanup and branch management
+
+Simply run `/tupe:container-pr` in each Claude Code session and work on multiple tasks simultaneously!
 
 ### Automated Linting Fixes
 
@@ -72,9 +111,57 @@ The included **docs-reviewer** agent ensures your documentation maintains the ri
 
 Simply run the `claude` command in your project directory, and all necessary configurations and commands will be set up automatically.
 
-## Usage
+## Available Commands
 
 After installation, you'll have access to powerful tupe commands in Claude Code:
+
+### `/tupe:container-pr` - Concurrent Multi-Agent Workflow
+
+Execute work in isolated Docker containers to enable multiple agents working simultaneously:
+
+**Primary benefit**: Run multiple Claude agents in parallel, each in its own container, without conflicts.
+
+```bash
+# In Claude Code, simply run:
+/tupe:container-pr
+```
+
+**What it does**:
+
+1. **Environment Setup**:
+   - Verifies Docker, GitHub CLI, and credentials
+   - Analyzes the repository structure
+   - Captures gh and npm tokens securely
+
+2. **Container Preparation**:
+   - Detects project type (Node.js, Python, Go, etc.)
+   - Builds appropriate Docker image with tools
+   - Installs GitHub CLI and necessary dependencies
+
+3. **Isolated Execution**:
+   - Creates a new branch for the work
+   - Executes all requested work inside the container
+   - Mounts repository as volume
+   - Passes credentials via environment variables
+
+4. **Automated PR Creation**:
+   - Commits all changes with descriptive messages
+   - Pushes to remote branch
+   - Creates pull request with comprehensive description
+   - Returns PR URL to the developer
+
+5. **Cleanup**:
+   - Removes container artifacts
+   - Returns to original branch
+
+**Benefits**:
+
+- **Concurrent agent workflows**: Run multiple agents in parallel without interference
+- **Complete isolation**: Each agent works in its own container environment
+- **Independent PRs**: Each task gets its own pull request automatically
+- **Zero conflicts**: Agents don't interfere with each other or the host
+- **Reproducible**: Same container environment every time
+- **Secure**: Credentials passed safely via environment variables
 
 ### `/tupe/lint` - Systematic Linting Error Fixer
 
@@ -86,6 +173,7 @@ Fix all ESLint errors in your project systematically:
 ```
 
 **What it does**:
+
 1. **Setup Phase**:
    - Installs/updates `eslint-config-agent@latest`
    - Creates/updates `eslint.config.mjs` with the agent config
@@ -108,7 +196,8 @@ Fix all ESLint errors in your project systematically:
    - Generates completion report
 
 **Example Output**:
-```
+
+```text
 Fixed 15 of 47 errors (32 remaining)
 Current: src/utils/helpers.ts:42 - no-unused-vars
 Status: ✓ Tests passing ✓ Build successful ✓ No new errors
@@ -146,7 +235,7 @@ pnpm test:coverage
 
 ### Project Structure
 
-```
+```text
 ├── src/
 │   ├── cli.ts          # CLI entry point
 │   ├── index.ts        # Main logic
@@ -173,6 +262,7 @@ pnpm release
 ```
 
 This will:
+
 1. Run tests and build
 2. Bump version
 3. Create git tag
