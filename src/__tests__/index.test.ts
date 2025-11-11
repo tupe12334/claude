@@ -1,7 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { execSync } from 'child_process'
-import { existsSync, mkdirSync } from 'fs'
-import { initializeCcSdd, setupCommands, setupAgents } from '../index.js'
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  appendFileSync,
+  writeFileSync,
+} from 'fs'
+import {
+  initializeCcSdd,
+  setupCommands,
+  setupAgents,
+  setupGitignore,
+} from '../index.js'
 
 export class TestError extends Error {
   constructor(message: string) {
@@ -16,6 +27,9 @@ vi.mock('fs')
 const mockExecSync = vi.mocked(execSync)
 const mockExistsSync = vi.mocked(existsSync)
 const mockMkdirSync = vi.mocked(mkdirSync)
+const mockReadFileSync = vi.mocked(readFileSync)
+const mockAppendFileSync = vi.mocked(appendFileSync)
+const mockWriteFileSync = vi.mocked(writeFileSync)
 
 describe('CLI Functions', () => {
   beforeEach(() => {
@@ -96,6 +110,84 @@ describe('CLI Functions', () => {
         expect.stringContaining('cp -r'),
         { stdio: 'inherit' }
       )
+    })
+  })
+
+  describe('setupGitignore', () => {
+    it('should skip if .gitignore already has all Claude Code entries', async () => {
+      mockExistsSync.mockReturnValue(true)
+      mockReadFileSync.mockReturnValue(
+        'node_modules/\n.claude-container/\neslint-report.json\n'
+      )
+
+      await setupGitignore()
+
+      expect(mockAppendFileSync).not.toHaveBeenCalled()
+    })
+
+    it('should only add missing entries (merge, not override)', async () => {
+      mockExistsSync.mockReturnValue(true)
+      mockReadFileSync.mockReturnValue(
+        'node_modules/\ndist/\n.claude-container/\n'
+      )
+
+      await setupGitignore()
+
+      // Should be called with content containing only the missing entry
+      expect(mockAppendFileSync).toHaveBeenCalledWith(
+        expect.stringContaining('.gitignore'),
+        expect.stringContaining('eslint-report.json')
+      )
+      // Should NOT duplicate the existing entry
+      const callArg = String(mockAppendFileSync.mock.calls[0][1])
+      expect(callArg.split('.claude-container/').length).toBe(1) // Should not appear again
+    })
+
+    it('should append all entries if .gitignore exists but missing all Claude entries', async () => {
+      mockExistsSync.mockReturnValue(true)
+      mockReadFileSync.mockReturnValue('node_modules/\ndist/\n')
+
+      await setupGitignore()
+
+      const callArg = String(mockAppendFileSync.mock.calls[0][1])
+      expect(callArg).toContain('.claude-container/')
+      expect(callArg).toContain('eslint-report.json')
+      expect(callArg).toContain('# Claude Code temporary files')
+    })
+
+    it('should not add comment header if only entries are missing', async () => {
+      mockExistsSync.mockReturnValue(true)
+      mockReadFileSync.mockReturnValue(
+        'node_modules/\n# Claude Code temporary files\n.claude-container/\n'
+      )
+
+      await setupGitignore()
+
+      const callArg = String(mockAppendFileSync.mock.calls[0][1])
+      expect(callArg).toContain('eslint-report.json')
+      // Should not duplicate the comment header
+      expect(callArg.split('# Claude Code temporary files').length).toBe(1)
+    })
+
+    it('should handle .gitignore without trailing newline', async () => {
+      mockExistsSync.mockReturnValue(true)
+      mockReadFileSync.mockReturnValue('node_modules/\ndist/')
+
+      await setupGitignore()
+
+      // Should add a newline before appending
+      const callArg = String(mockAppendFileSync.mock.calls[0][1])
+      expect(callArg.startsWith('\n')).toBe(true)
+    })
+
+    it('should not fail if .gitignore update throws error', async () => {
+      mockExistsSync.mockReturnValue(true)
+      mockReadFileSync.mockImplementation(() => {
+        throw new TestError('Read failed')
+      })
+
+      // Should not throw
+      await expect(setupGitignore()).resolves.not.toThrow()
     })
   })
 })

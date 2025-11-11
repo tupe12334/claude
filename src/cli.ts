@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 
-import { initializeCcSdd, setupCommands, setupAgents } from './index.js'
+import {
+  initializeCcSdd,
+  setupCommands,
+  setupAgents,
+  setupGitignore,
+} from './index.js'
 
 async function main(): Promise<void> {
   try {
@@ -14,6 +19,10 @@ async function main(): Promise<void> {
 
     // Setup agents
     await setupAgents()
+
+    // Ensure .gitignore has Claude Code entries
+    await setupGitignore()
+
     console.log('✅ Setup complete!')
   } catch (error) {
     console.error('❌ Setup failed:', error)

@@ -1,9 +1,30 @@
+# Dependencies
 node_modules/
+
+# Build output
 dist/
+
+# Testing
 coverage/
+
+# Logs
 *.log
-.DS_Store
+
+# Environment
 .env
 .env.local
+
+# IDE
 .vscode/
 .idea/
+
+# OS
+.DS_Store
+
+# Claude Code temporary files
+.claude-container/
+eslint-report.json
+
+# Temporary files
+*.tmp
+.cache/
