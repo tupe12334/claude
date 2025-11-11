@@ -14,6 +14,7 @@ This command handles two scenarios:
 2. **Internal/Empty Packages**: Setup without publishing, CI/CD with tests/builds only
 
 Both scenarios ensure:
+
 - ✅ Correct package.json configuration
 - ✅ Proper testing setup (vitest if needed)
 - ✅ Proper build setup (vite if needed for libraries)
@@ -47,6 +48,7 @@ test -d .github/workflows && ls -la .github/workflows/ || echo "NO_CI"
 ```
 
 **Categorize the project**:
+
 - **Empty folder**: No package.json, no src/, minimal/no files
 - **Existing package**: Has package.json
 - **New project**: No package.json but has source files
@@ -56,6 +58,7 @@ test -d .github/workflows && ls -la .github/workflows/ || echo "NO_CI"
 Ask the user to clarify the package type:
 
 **Questions to determine**:
+
 1. **Is this package meant to be published to npm?** (Yes/No)
 2. **Does this package need a build step?** (Yes for libraries, No for pure Node.js packages)
 3. **Does this package need tests?** (Usually Yes)
@@ -63,6 +66,7 @@ Ask the user to clarify the package type:
 5. **Package description**: Brief description of what it does
 
 Based on answers, set:
+
 - `PUBLISHABLE`: true/false
 - `NEEDS_BUILD`: true/false
 - `NEEDS_TESTS`: true/false
@@ -96,9 +100,7 @@ Then ensure it has these essential fields:
       "import": "./dist/index.js"
     }
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
@@ -117,7 +119,7 @@ Then ensure it has these essential fields:
   "author": "",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }
 ```
@@ -125,6 +127,7 @@ Then ensure it has these essential fields:
 **For existing package.json**:
 
 Validate and fix:
+
 1. ✅ `type` should be `"module"` (ES modules)
 2. ✅ `main` points to built output (usually `./dist/index.js`)
 3. ✅ `types` points to type definitions (usually `./dist/index.d.ts`)
@@ -202,6 +205,7 @@ fi
 ```
 
 **Validation checklist**:
+
 - ✅ `strict: true` for type safety
 - ✅ `declaration: true` for .d.ts files
 - ✅ `outDir` matches package.json main field
@@ -303,15 +307,7 @@ Spell checking configuration for the project:
 {
   "version": "0.2",
   "language": "en",
-  "words": [
-    "tupe",
-    "pnpm",
-    "vitest",
-    "husky",
-    "eslint",
-    "tsconfig",
-    "esbenp"
-  ],
+  "words": ["tupe", "pnpm", "vitest", "husky", "eslint", "tsconfig", "esbenp"],
   "ignorePaths": [
     "node_modules",
     "dist",
@@ -390,16 +386,9 @@ Create `.lintstagedrc.json` for staged file linting:
 
 ```json
 {
-  "*.{ts,tsx,js,jsx}": [
-    "eslint --fix",
-    "prettier --write"
-  ],
-  "*.{json,md}": [
-    "prettier --write"
-  ],
-  "*.{ts,js,md,json}": [
-    "cspell lint --no-must-find-files"
-  ]
+  "*.{ts,tsx,js,jsx}": ["eslint --fix", "prettier --write"],
+  "*.{json,md}": ["prettier --write"],
+  "*.{ts,js,md,json}": ["cspell lint --no-must-find-files"]
 }
 ```
 
@@ -440,6 +429,7 @@ git add .
 ```
 
 **Hook Workflow**:
+
 1. **pre-commit**: Runs on `git commit`
    - Lints and formats only staged files
    - Runs spell check on staged files
@@ -507,9 +497,9 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -517,37 +507,37 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: latest
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-    - name: Lint
-      run: pnpm lint
+      - name: Lint
+        run: pnpm lint
 
-    - name: Format check
-      run: pnpm format:check
+      - name: Format check
+        run: pnpm format:check
 
-    - name: Run tests
-      run: pnpm test --run
+      - name: Run tests
+        run: pnpm test --run
 
-    - name: Build
-      run: pnpm build
+      - name: Build
+        run: pnpm build
 
   publish:
     needs: test
@@ -555,33 +545,33 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: latest
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: 'pnpm'
-        registry-url: 'https://registry.npmjs.org'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
 
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-    - name: Build
-      run: pnpm build
+      - name: Build
+        run: pnpm build
 
-    - name: Publish to npm
-      run: pnpm publish --access public --no-git-checks
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm
+        run: pnpm publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
 **For Internal/Non-Publishable Packages** (`.github/workflows/ci.yml`):
@@ -591,9 +581,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test:
@@ -601,37 +591,37 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: latest
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
 
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
-    - name: Install dependencies
-      run: pnpm install --frozen-lockfile
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-    - name: Lint
-      run: pnpm lint
+      - name: Lint
+        run: pnpm lint
 
-    - name: Format check
-      run: pnpm format:check
+      - name: Format check
+        run: pnpm format:check
 
-    - name: Run tests
-      run: pnpm test --run
+      - name: Run tests
+        run: pnpm test --run
 
-    - name: Build
-      run: pnpm build
+      - name: Build
+        run: pnpm build
 ```
 
 ### Step 3: Verify GitHub CLI and Repository Setup
@@ -780,6 +770,7 @@ done
 Review and confirm:
 
 **Package Configuration**:
+
 - ✅ package.json exists with correct fields
 - ✅ `type: "module"` for ES modules
 - ✅ `main` and `types` fields point to dist/
@@ -789,16 +780,19 @@ Review and confirm:
 - ✅ If publishable: `publishConfig.access` is set
 
 **TypeScript Configuration**:
+
 - ✅ tsconfig.json exists with strict mode
 - ✅ Compiles without errors (`pnpm tsc --noEmit`)
 - ✅ Generates .d.ts files (`declaration: true`)
 
 **Testing Setup** (if needed):
+
 - ✅ vitest.config.ts exists
 - ✅ Tests run successfully (`pnpm test`)
 - ✅ Coverage configuration works
 
 **Linting and Formatting**:
+
 - ✅ eslint.config.mjs exists with eslint-config-agent@latest
 - ✅ .prettierrc exists
 - ✅ cspell.json exists
@@ -807,18 +801,21 @@ Review and confirm:
 - ✅ Spell checking passes (`pnpm spell`)
 
 **CI/CD**:
+
 - ✅ .github/workflows/ci.yml exists
 - ✅ Workflow is valid YAML
-- ✅ Tests node versions 18, 20, 22
+- ✅ Tests node versions 20, 22
 - ✅ Runs lint, format, test, build
 - ✅ If publishable: Has publish job with NPM_TOKEN
 
 **Release Configuration** (if publishable):
+
 - ✅ release-it installed as devDependency
 - ✅ .release-it.json exists and configured
 - ✅ `pnpm release` script exists
 
 **Git Hooks (Husky + lint-staged)**:
+
 - ✅ Husky installed and initialized
 - ✅ .husky/pre-commit exists (runs lint-staged)
 - ✅ .husky/pre-push exists (runs full checks)
@@ -827,6 +824,7 @@ Review and confirm:
 - ✅ Pre-push hook works (test manually)
 
 **Git Configuration**:
+
 - ✅ .gitignore exists and excludes dist/, node_modules/
 - ✅ Repository is connected to GitHub
 - ✅ gh CLI is authenticated
@@ -886,7 +884,7 @@ Version: X.X.X
 
 ✅ CI/CD Setup:
   - GitHub Actions workflow configured
-  - Tests on Node 18, 20, 22
+  - Tests on Node 20, 22
   - Runs lint, format, spell, test, build
   [- Auto-publishes to npm on main push] - if publishable
 
@@ -908,6 +906,7 @@ Version: X.X.X
 ### For Publishable Packages
 
 1. **NPM Token Required**: You must add `NPM_TOKEN` secret to GitHub repository settings:
+
    ```bash
    # Get npm token from ~/.npmrc or create one:
    npm token create
@@ -947,7 +946,7 @@ Version: X.X.X
 ### Common Issues
 
 1. **`pnpm install` fails**:
-   - Check Node.js version (need >= 18)
+   - Check Node.js version (need >= 20)
    - Clear pnpm cache: `pnpm store prune`
 
 2. **TypeScript compilation fails**:

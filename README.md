@@ -177,10 +177,12 @@ Initialize or validate package setup with correct configuration for publishing, 
 **What it does**:
 
 Handles two scenarios:
+
 1. **Publishable Packages**: Full setup with npm publishing, release-it, CI/CD with publish step
 2. **Internal Packages**: Setup without publishing, CI/CD with tests/builds only
 
 **Setup includes**:
+
 1. **Package Configuration**:
    - Creates or validates package.json with correct ES module setup
    - Ensures proper `main`, `types`, `exports` fields
@@ -217,7 +219,7 @@ Handles two scenarios:
 
 7. **CI/CD Pipeline**:
    - Creates GitHub Actions workflow
-   - Tests on Node 18, 20, 22
+   - Tests on Node 20, 22
    - Runs lint, format check, tests, and build
    - Auto-publishes to npm (if publishable)
    - Or just runs tests/builds (if internal)
@@ -246,6 +248,7 @@ Scenario 3: Validate existing package
 ```
 
 **Validation checklist**:
+
 - ✅ package.json with ES modules and correct fields
 - ✅ TypeScript configuration with strict mode
 - ✅ Testing setup with vitest
@@ -258,6 +261,7 @@ Scenario 3: Validate existing package
 - ✅ GitHub secrets verified (if publishable)
 
 **Git hooks ensure**:
+
 - 🔒 Pre-commit: Auto-fix linting, formatting, spelling on staged files
 - 🔒 Pre-push: Full validation (lint, format, spell, tests) before pushing
 
@@ -305,7 +309,7 @@ Status: ✓ Tests passing ✓ Build successful ✓ No new errors
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
+- Node.js >= 20.0.0
 - pnpm
 
 ### Setup

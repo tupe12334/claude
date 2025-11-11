@@ -119,7 +119,7 @@ Then ensure it has these essential fields:
   "author": "",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }
 ```
@@ -527,7 +527,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22]
 
     steps:
       - name: Checkout code
@@ -611,7 +611,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22]
 
     steps:
       - name: Checkout code
@@ -829,7 +829,7 @@ Review and confirm:
 
 - ✅ .github/workflows/ci.yml exists
 - ✅ Workflow is valid YAML
-- ✅ Tests node versions 18, 20, 22
+- ✅ Tests node versions 20, 22
 - ✅ Runs lint, format, test, build
 - ✅ If publishable: Has publish job with NPM_TOKEN
 
@@ -910,7 +910,7 @@ Version: X.X.X
 
 ✅ CI/CD Setup:
   - GitHub Actions workflow configured
-  - Tests on Node 18, 20, 22
+  - Tests on Node 20, 22
   - Runs lint, format, spell, test, build
   [- Auto-publishes to npm on main push] - if publishable
 
@@ -972,7 +972,7 @@ Version: X.X.X
 ### Common Issues
 
 1. **`pnpm install` fails**:
-   - Check Node.js version (need >= 18)
+   - Check Node.js version (need >= 20)
    - Clear pnpm cache: `pnpm store prune`
 
 2. **TypeScript compilation fails**:
