@@ -570,12 +570,38 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check if version changed
+        id: version_check
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+
+          # Get version from previous commit
+          git checkout HEAD~1 package.json 2>/dev/null || echo "No previous commit"
+          PREV_VERSION=$(node -p "require('./package.json').version" 2>/dev/null || echo "none")
+          echo "Previous version: $PREV_VERSION"
+
+          # Restore current package.json
+          git checkout HEAD package.json
+
+          # Compare versions
+          if [ "$CURRENT_VERSION" != "$PREV_VERSION" ]; then
+            echo "Version changed from $PREV_VERSION to $CURRENT_VERSION"
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "Version unchanged, skipping publish"
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install pnpm
+        if: steps.version_check.outputs.should_publish == 'true'
         uses: pnpm/action-setup@v4
         with:
           version: latest
 
       - name: Setup Node.js
+        if: steps.version_check.outputs.should_publish == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -583,16 +609,33 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
+        if: steps.version_check.outputs.should_publish == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Build
+        if: steps.version_check.outputs.should_publish == 'true'
         run: pnpm build
 
       - name: Publish to npm
+        if: steps.version_check.outputs.should_publish == 'true'
         run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
+
+**Version Change Detection**:
+
+The publish job includes a smart version change check that:
+
+- Compares the current package.json version with the previous commit's version
+- Only publishes to npm when the version has actually changed
+- Skips all publish steps (saving CI time) if the version is unchanged
+- Prevents accidental duplicate publishes of the same version
+
+This means you **must bump the version** in package.json before merging to main for a publish to occur. You can either:
+
+1. Manually edit package.json and change the version
+2. Use `pnpm release` which handles version bumping, changelog, and git tags automatically
 
 **For Internal/Non-Publishable Packages** (`.github/workflows/ci.yml`):
 
@@ -687,7 +730,7 @@ fi
 
 ### Step 2: Create .gitignore
 
-```
+```gitignore
 # Dependencies
 node_modules/
 .pnp
@@ -832,6 +875,7 @@ Review and confirm:
 - ✅ Tests node versions 20, 22
 - ✅ Runs lint, format, test, build
 - ✅ If publishable: Has publish job with NPM_TOKEN
+- ✅ If publishable: Publish only runs when package.json version changes
 
 **Release Configuration** (if publishable):
 
@@ -859,7 +903,7 @@ Review and confirm:
 
 Provide a comprehensive summary:
 
-```
+```text
 📦 Package Setup Complete!
 
 Package: PACKAGE_NAME
@@ -912,7 +956,7 @@ Version: X.X.X
   - GitHub Actions workflow configured
   - Tests on Node 20, 22
   - Runs lint, format, spell, test, build
-  [- Auto-publishes to npm on main push] - if publishable
+  [- Auto-publishes to npm on main push (only when version changes)] - if publishable
 
 ⚠️  Next Steps:
   1. [If publishable] Add NPM_TOKEN secret to GitHub repository
@@ -946,8 +990,9 @@ Version: X.X.X
 3. **Publishing Workflow**:
    - Develop and commit to feature branches
    - Merge to main (triggers CI)
-   - If tests pass, automatically publishes
-   - Or use `pnpm release` for manual release with changelog
+   - If tests pass AND version changed, automatically publishes
+   - Version must be bumped in package.json for publish to trigger
+   - Or use `pnpm release` for manual release with changelog and version bump
 
 ### For Internal Packages
 
