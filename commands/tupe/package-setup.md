@@ -777,6 +777,270 @@ eslint-report.json
 .cache/
 ```
 
+### Step 3: Create CONTRIBUTING.md
+
+Create a comprehensive contributing guide for the project:
+
+````bash
+if [ ! -f CONTRIBUTING.md ]; then
+  cat > CONTRIBUTING.md << 'EOF'
+# Contributing to [PACKAGE_NAME]
+
+Thank you for your interest in contributing! This document provides guidelines and instructions for contributing to this project.
+
+## Getting Started
+
+1. **Fork the repository** and clone it locally
+2. **Install dependencies**: `pnpm install`
+3. **Create a branch** for your changes: `git checkout -b feature/your-feature-name`
+
+## Development Workflow
+
+### Prerequisites
+
+- Node.js >= 20.0.0
+- pnpm (latest version)
+
+### Setup
+
+```bash
+# Install dependencies
+pnpm install
+
+# Build the project
+pnpm build
+
+# Run tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+````
+
+### Development Commands
+
+- `pnpm dev` - Build in watch mode
+- `pnpm test` - Run tests
+- `pnpm test:coverage` - Run tests with coverage
+- `pnpm lint` - Check code quality
+- `pnpm lint:fix` - Fix linting issues
+- `pnpm format` - Format code
+- `pnpm format:check` - Check formatting
+- `pnpm spell` - Check spelling
+
+## Making Changes
+
+### Code Style
+
+This project uses:
+
+- **TypeScript** with strict mode
+- **ESLint** with `eslint-config-agent` for linting
+- **Prettier** for code formatting
+- **cspell** for spell checking
+
+The codebase follows these conventions:
+
+- ES modules (use `.js` extensions in imports)
+- Strict TypeScript types
+- Descriptive variable and function names
+- Comprehensive JSDoc comments for public APIs
+
+### Commit Messages
+
+Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+
+```
+type(scope): description
+
+[optional body]
+
+[optional footer]
+```
+
+**Types**:
+
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, etc.)
+- `refactor`: Code refactoring
+- `test`: Adding or updating tests
+- `chore`: Maintenance tasks
+
+**Examples**:
+
+```
+feat(api): add user authentication endpoint
+fix(parser): handle edge case in date parsing
+docs(readme): update installation instructions
+```
+
+### Testing
+
+- Write tests for all new features and bug fixes
+- Ensure all tests pass: `pnpm test`
+- Maintain or improve code coverage
+- Tests should be in `src/__tests__/` directory
+- Use descriptive test names
+
+### Git Hooks
+
+This project uses Husky for git hooks:
+
+- **Pre-commit**: Runs lint-staged (lints, formats, and spell-checks staged files)
+- **Pre-push**: Runs full validation (lint, format, spell check, tests)
+
+These hooks ensure code quality before commits and pushes.
+
+## Submitting Changes
+
+### Pull Request Process
+
+1. **Update your fork** with the latest changes from main:
+
+   ```bash
+   git checkout main
+   git pull upstream main
+   ```
+
+2. **Rebase your branch** (if needed):
+
+   ```bash
+   git checkout your-branch
+   git rebase main
+   ```
+
+3. **Run all checks locally**:
+
+   ```bash
+   pnpm lint
+   pnpm format:check
+   pnpm spell
+   pnpm test
+   pnpm build
+   ```
+
+4. **Push your changes**:
+
+   ```bash
+   git push origin your-branch
+   ```
+
+5. **Open a Pull Request** on GitHub with:
+   - Clear title describing the change
+   - Description of what changed and why
+   - Reference to any related issues
+   - Screenshots (if UI changes)
+
+### Pull Request Guidelines
+
+- Keep PRs focused on a single feature or fix
+- Write clear, descriptive PR titles and descriptions
+- Link related issues using "Fixes #123" or "Closes #123"
+- Ensure CI passes (tests, linting, formatting)
+- Respond to review feedback promptly
+- Keep commits clean and well-organized
+
+## Reporting Issues
+
+### Bug Reports
+
+When reporting bugs, please include:
+
+- **Description**: Clear description of the bug
+- **Steps to reproduce**: Detailed steps to reproduce the issue
+- **Expected behavior**: What you expected to happen
+- **Actual behavior**: What actually happened
+- **Environment**: Node.js version, OS, package version
+- **Error messages**: Full error messages or stack traces
+- **Code samples**: Minimal reproduction if possible
+
+### Feature Requests
+
+When requesting features, please include:
+
+- **Use case**: Why is this feature needed?
+- **Proposed solution**: How should it work?
+- **Alternatives**: What alternatives have you considered?
+- **Examples**: Examples of similar features elsewhere
+
+## Questions?
+
+- Check existing issues and discussions
+- Read the documentation in README.md
+- Open a new issue with the "question" label
+
+## Code of Conduct
+
+- Be respectful and inclusive
+- Welcome newcomers and beginners
+- Focus on constructive feedback
+- Assume good intentions
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the same license as the project (see LICENSE file).
+
+---
+
+Thank you for contributing! 🎉
+EOF
+echo "✅ Created CONTRIBUTING.md"
+else
+echo "ℹ️ CONTRIBUTING.md already exists"
+fi
+
+````
+
+### Step 4: Create LICENSE File
+
+Create an MIT License file (or ask user for preference):
+
+```bash
+# Ask user for license preference if this is a new project
+if [ ! -f LICENSE ]; then
+  # Get current year
+  YEAR=$(date +%Y)
+
+  # Get author from package.json or git config
+  AUTHOR=$(node -p "require('./package.json').author" 2>/dev/null || git config user.name || echo "Your Name")
+
+  cat > LICENSE << EOF
+MIT License
+
+Copyright (c) $YEAR $AUTHOR
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+EOF
+  echo "✅ Created LICENSE (MIT)"
+else
+  echo "ℹ️  LICENSE already exists"
+fi
+````
+
+**Note**: The MIT License is used by default. If you need a different license (Apache-2.0, GPL-3.0, etc.), you can:
+
+1. Replace the LICENSE content after running this command
+2. Use GitHub's license chooser: [choosealicense.com](https://choosealicense.com/)
+3. Update the `license` field in package.json to match
+
 ## Phase 10: Validation and Testing
 
 ### Step 1: Validate Configuration
@@ -899,6 +1163,13 @@ Review and confirm:
 - ✅ gh CLI is authenticated
 - ✅ If publishable: NPM_TOKEN secret is set
 
+**Documentation**:
+
+- ✅ CONTRIBUTING.md exists with contribution guidelines
+- ✅ LICENSE file exists (MIT or chosen license)
+- ✅ README.md has basic project information
+- ✅ License in package.json matches LICENSE file
+
 ### Generate Summary Report
 
 Provide a comprehensive summary:
@@ -922,6 +1193,8 @@ Version: X.X.X
   - .husky/pre-commit (lint-staged on commit)
   - .husky/pre-push (full checks before push)
   - .gitignore (git exclusions)
+  - CONTRIBUTING.md (contribution guidelines)
+  - LICENSE (MIT license)
   [- .release-it.json (releases)] - if publishable
   - .github/workflows/ci.yml (CI/CD)
 
@@ -960,13 +1233,15 @@ Version: X.X.X
 
 ⚠️  Next Steps:
   1. [If publishable] Add NPM_TOKEN secret to GitHub repository
-  2. Test git hooks (make a commit to test pre-commit, try pushing to test pre-push)
-  3. Write your package code in src/
-  4. Add tests in src/__tests__/
-  5. Update package.json metadata (author, keywords, etc.)
-  6. Add project-specific words to cspell.json
-  7. Push to GitHub to trigger CI
-  [8. Run `pnpm release` to publish first version] - if publishable
+  2. Review and customize CONTRIBUTING.md for your project
+  3. Verify LICENSE file has correct copyright year and author
+  4. Test git hooks (make a commit to test pre-commit, try pushing to test pre-push)
+  5. Write your package code in src/
+  6. Add tests in src/__tests__/
+  7. Update package.json metadata (author, keywords, description, repository URL)
+  8. Add project-specific words to cspell.json
+  9. Push to GitHub to trigger CI
+  [10. Run `pnpm release` to publish first version] - if publishable
 
 🚀 Ready to develop!
 ```
