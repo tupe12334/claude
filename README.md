@@ -340,8 +340,9 @@ pnpm test:coverage
 ```text
 ├── src/
 │   ├── cli.ts          # CLI entry point
+│   ├── cli.spec.ts     # CLI tests
 │   ├── index.ts        # Main logic
-│   └── __tests__/      # Test files
+│   └── index.spec.ts   # Main logic tests
 ├── commands/           # Custom commands to be deployed
 ├── agents/             # Agents to be deployed
 ├── dist/              # Built output
