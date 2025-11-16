@@ -1,5 +1,5 @@
 ---
-description: Initialize or validate package setup with correct package.json, release-it, CI/CD, and build/test configuration. Handles both publishable packages and internal packages.
+description: Initialize or validate package setup with correct package.json, release-it, commitlint, CI/CD, and build/test configuration. Handles both publishable packages and internal packages.
 ---
 
 # Package Setup and Validation
@@ -158,6 +158,9 @@ pnpm add -D eslint@latest eslint-config-agent@latest
 
 # Git hooks and pre-commit checks
 pnpm add -D husky lint-staged
+
+# Commit message linting
+pnpm add -D @commitlint/cli @commitlint/config-conventional
 
 # Spell checking
 pnpm add -D cspell
@@ -337,7 +340,46 @@ Spell checking configuration for the project:
 
 **Note**: Add project-specific words to the `words` array as needed.
 
-## Phase 6: Git Hooks Setup (Husky + lint-staged)
+### Step 5: Create commitlint.config.mjs
+
+Commit message linting configuration for enforcing conventional commits:
+
+```javascript
+export default {
+  extends: ['@commitlint/config-conventional'],
+  rules: {
+    'type-enum': [
+      2,
+      'always',
+      [
+        'feat',
+        'fix',
+        'docs',
+        'style',
+        'refactor',
+        'test',
+        'chore',
+        'perf',
+        'ci',
+        'build',
+        'revert',
+      ],
+    ],
+    'subject-case': [2, 'never', ['upper-case']],
+    'header-max-length': [2, 'always', 100],
+  },
+}
+```
+
+**What this does**:
+
+- Enforces conventional commit format: `type(scope): description`
+- Validates commit message types (feat, fix, docs, etc.)
+- Ensures subject line doesn't start with uppercase
+- Limits header to 100 characters
+- Runs automatically on every commit via husky
+
+## Phase 6: Git Hooks Setup (Husky + lint-staged + commitlint)
 
 ### Step 1: Initialize Husky
 
@@ -427,7 +469,46 @@ Make it executable:
 chmod +x .husky/pre-commit
 ```
 
-### Step 5: Verify Husky Setup
+### Step 5: Create commit-msg Hook
+
+Create `.husky/commit-msg` for commit message linting:
+
+```bash
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run commitlint on commit message
+pnpm exec commitlint --edit "$1"
+```
+
+Make it executable:
+
+```bash
+chmod +x .husky/commit-msg
+```
+
+**What this does**:
+
+- Runs commitlint on every commit message
+- Validates commit follows conventional commit format
+- Blocks commits with invalid messages
+- Provides helpful error messages about what's wrong
+
+**Example validation**:
+
+```bash
+# ✅ Valid commits:
+git commit -m "feat(api): add user authentication"
+git commit -m "fix(parser): handle null values"
+git commit -m "docs(readme): update installation steps"
+
+# ❌ Invalid commits:
+git commit -m "Add feature"  # Missing type
+git commit -m "FEAT: something"  # Wrong format
+git commit -m "random stuff"  # No conventional format
+```
+
+### Step 6: Verify Husky Setup
 
 ```bash
 # Check husky hooks exist
@@ -435,11 +516,15 @@ ls -la .husky/
 
 # Should show:
 # - pre-commit (runs lint-staged on staged files)
+# - commit-msg (validates commit message format)
 # - pre-push (runs full lint, format, spell, test checks)
 
 # Test pre-commit hook manually
 git add .
 .husky/pre-commit
+
+# Test commit-msg hook manually
+echo "feat(test): testing commitlint" | .husky/commit-msg
 
 # Test pre-push hook manually
 .husky/pre-push
@@ -447,12 +532,18 @@ git add .
 
 **Hook Workflow**:
 
-1. **pre-commit**: Runs on `git commit`
+1. **pre-commit**: Runs on `git commit` (before commit message)
    - Lints and formats only staged files
    - Runs spell check on staged files
    - Fast feedback loop
 
-2. **pre-push**: Runs on `git push`
+2. **commit-msg**: Runs on `git commit` (after entering commit message)
+   - Validates commit message format
+   - Enforces conventional commits
+   - Blocks non-conforming messages
+   - Provides helpful error feedback
+
+3. **pre-push**: Runs on `git push`
    - Full project lint check
    - Full format check
    - Full spell check
@@ -886,9 +977,12 @@ docs(readme): update installation instructions
 This project uses Husky for git hooks:
 
 - **Pre-commit**: Runs lint-staged (lints, formats, and spell-checks staged files)
+- **Commit-msg**: Validates commit message format using commitlint (enforces conventional commits)
 - **Pre-push**: Runs full validation (lint, format, spell check, tests)
 
-These hooks ensure code quality before commits and pushes.
+These hooks ensure code quality and consistent commit messages before commits and pushes.
+
+**Important**: Commit messages must follow the conventional commits format or they will be rejected. See the "Commit Messages" section above for details.
 
 ## Submitting Changes
 
@@ -1144,13 +1238,16 @@ Review and confirm:
 - ✅ .release-it.json exists and configured
 - ✅ `pnpm release` script exists
 
-**Git Hooks (Husky + lint-staged)**:
+**Git Hooks (Husky + lint-staged + commitlint)**:
 
 - ✅ Husky installed and initialized
+- ✅ commitlint.config.mjs exists (conventional commits config)
 - ✅ .husky/pre-commit exists (runs lint-staged)
+- ✅ .husky/commit-msg exists (validates commit messages)
 - ✅ .husky/pre-push exists (runs full checks)
 - ✅ .lintstagedrc.json configured
 - ✅ Pre-commit hook works (test manually)
+- ✅ Commit-msg hook works (test manually)
 - ✅ Pre-push hook works (test manually)
 
 **Git Configuration**:
@@ -1186,8 +1283,10 @@ Version: X.X.X
   - .prettierrc (formatting)
   - .prettierignore
   - cspell.json (spell checking)
+  - commitlint.config.mjs (conventional commits)
   - .lintstagedrc.json (staged file linting)
   - .husky/pre-commit (lint-staged on commit)
+  - .husky/commit-msg (commit message validation)
   - .husky/pre-push (full checks before push)
   - .gitignore (git exclusions)
   - CONTRIBUTING.md (contribution guidelines)
@@ -1200,6 +1299,7 @@ Version: X.X.X
   - ESLint@latest + eslint-config-agent@latest
   - Prettier
   - cspell (spell checking)
+  - commitlint + @commitlint/config-conventional (commit message linting)
   - Husky + lint-staged (git hooks)
   - Vitest (testing)
   [- release-it] - if publishable
@@ -1220,6 +1320,7 @@ Version: X.X.X
 
 ✅ Git Hooks Configured:
   Pre-commit:  Runs lint-staged (lint, format, spell check staged files)
+  Commit-msg:  Validates commit message format (conventional commits)
   Pre-push:    Runs full validation (lint, format, spell, tests)
 
 ✅ CI/CD Setup:
