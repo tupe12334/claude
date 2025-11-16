@@ -532,8 +532,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -594,8 +592,6 @@ jobs:
       - name: Install pnpm
         if: steps.version_check.outputs.should_publish == 'true'
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
       - name: Setup Node.js
         if: steps.version_check.outputs.should_publish == 'true'
@@ -659,8 +655,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
