@@ -34,7 +34,7 @@ This will:
 ## What it does
 
 - **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
-- **Tupe Commands Suite**: Deploys 10 specialized commands to `.claude/commands/tupe/`:
+- **Tupe Commands Suite**: Deploys 11 specialized commands to `.claude/commands/tupe/`:
   - **container-pr**: Execute work in isolated Docker containers with automatic PR creation
   - **package-setup**: Initialize or validate package configuration with pnpm, vitest, and CI/CD
   - **lint**: Systematic ESLint error fixing with continuous verification
@@ -45,6 +45,7 @@ This will:
   - **validate-feature**: Feature validation with comprehensive testing
   - **implement-and-validate**: Full TDD implementation cycle
   - **lib-opportunities**: Analyze for npm package replacement opportunities
+  - **summary**: Provide concise conversation summaries
 - **GitOps Agent**: Deploys an intelligent Git operations manager to `.claude/agents/` that handles commits with context awareness for monorepos, polyrepos, and submodules
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
 
