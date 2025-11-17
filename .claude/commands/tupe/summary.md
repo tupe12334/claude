@@ -5,6 +5,7 @@ description: Provide a concise summary of the conversation's goal and outcomes
 # Chat Summary
 
 Provide a brief, single-paragraph summary of this conversation covering:
+
 - The primary goal or task discussed
 - Key actions taken or decisions made
 - Current state or outcome
