@@ -37,6 +37,8 @@
   "author": "tupe12334",
   "license": "MIT",
   "devDependencies": {
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.39.0",
     "@types/node": "^20.0.0",
@@ -46,6 +48,7 @@
     "cspell": "^9.2.2",
     "eslint": "^9.39.1",
     "eslint-config-agent": "^1.7.2",
+    "eslint-config-publishable-package-json": "^1.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
     "prettier": "^3.0.0",
