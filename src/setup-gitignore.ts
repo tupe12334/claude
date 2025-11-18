@@ -5,6 +5,7 @@ const REQUIRED_GITIGNORE_ENTRIES = [
   '',
   '# Claude Code temporary files',
   '.claude-container/',
+  '.claude-revert-backup-*/',
   'eslint-report.json',
 ]
 
@@ -65,6 +66,9 @@ export async function setupGitignore(): Promise<void> {
     // Check each actual entry (not comments or empty lines)
     if (!existingContent.includes('.claude-container/')) {
       missingEntries.push('.claude-container/')
+    }
+    if (!existingContent.includes('.claude-revert-backup-*/')) {
+      missingEntries.push('.claude-revert-backup-*/')
     }
     if (!existingContent.includes('eslint-report.json')) {
       missingEntries.push('eslint-report.json')

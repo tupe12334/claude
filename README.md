@@ -34,10 +34,11 @@ This will:
 ## What it does
 
 - **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
-- **Tupe Commands Suite**: Deploys 12 specialized commands to `.claude/commands/tupe/`:
+- **Tupe Commands Suite**: Deploys 13 specialized commands to `.claude/commands/tupe/`:
   - **container-pr**: Execute work in isolated Docker containers with automatic PR creation
   - **package-setup**: Initialize or validate package configuration with pnpm, vitest, and CI/CD
   - **lint**: Systematic ESLint error fixing with continuous verification
+  - **revert**: Intelligently revert only current session changes while preserving other work
   - **boot**: Project onboarding with service initialization
   - **project-onboard**: Comprehensive codebase exploration and learning
   - **commit-push**: Smart git operations for session changes
@@ -306,6 +307,93 @@ Fixed 15 of 47 errors (32 remaining)
 Current: src/utils/helpers.ts:42 - no-unused-vars
 Status: ✓ Tests passing ✓ Build successful ✓ No new errors
 ```
+
+### `/tupe:revert` - Smart Session Change Revert
+
+Intelligently revert ONLY the changes made during the current chat session while preserving all other work:
+
+```bash
+# In Claude Code, simply run:
+/tupe:revert
+```
+
+**What it does**:
+
+1. **Session Detection Phase**:
+   - Analyzes conversation history to identify files modified in THIS session
+   - Distinguishes between session changes and pre-existing uncommitted work
+   - Detects files created, modified, or deleted during the session
+   - Creates automatic safety backup before any operations
+
+2. **Change Classification**:
+   - **Session-only changes**: Files exclusively modified in this session → Full revert
+   - **Mixed changes**: Files with both pre-session and session modifications → Surgical revert
+   - **Non-session changes**: Files modified outside this session → Preserved completely
+   - **Staged changes**: Carefully handles staged vs unstaged modifications
+
+3. **Surgical Revert Execution**:
+   - Presents detailed plan showing what will be reverted vs preserved
+   - Asks for user confirmation before making changes
+   - Executes precise revert operations file-by-file
+   - Verifies results and provides comprehensive summary
+
+4. **Safety Features**:
+   - Automatic backup creation (timestamped in `.claude-revert-backup-*`)
+   - Clear restoration instructions if needed
+   - Preserves all non-session work (staged changes, pre-existing modifications)
+   - Handles edge cases (build artifacts, renamed files, partial staging)
+
+**Use Cases**:
+
+```text
+Scenario 1: Simple undo
+→ User: "Actually, undo everything I just asked you to do"
+→ Reverts all session changes, preserves pre-existing work
+
+Scenario 2: Partial abandon
+→ User: "Keep the config changes but revert the API modifications"
+→ Selectively reverts only API-related session changes
+
+Scenario 3: Mixed changes protection
+→ File had uncommitted changes before session + session changes
+→ Surgically reverts only the session portion
+→ Preserves pre-existing uncommitted work perfectly
+```
+
+**Example Output**:
+
+```text
+🔍 Session Revert Analysis
+═══════════════════════════
+
+FILES TO FULLY REVERT (3 files):
+  ✓ src/api/auth.ts - Created in this session
+  ✓ src/utils/validate.ts - Modified only in this session
+
+FILES WITH MIXED CHANGES (1 file):
+  ⚠️  src/main.ts
+      - Pre-existing changes: lines 10-15
+      - Session changes: lines 45-60
+      Strategy: Will revert only lines 45-60
+
+FILES TO PRESERVE (2 files):
+  ✗ src/config.ts - Pre-session changes kept
+  ✗ src/types.ts - Modified outside this session
+
+SAFETY:
+  ✓ Backup: .claude-revert-backup-20251118-143022
+  ✓ Can restore: cp -r .claude-revert-backup-20251118-143022/* .
+
+Proceed? [Yes/Show diff/Cancel]
+```
+
+**Benefits**:
+
+- **Precise control**: Revert only what you want, keep everything else
+- **Safety first**: Automatic backups with easy restoration
+- **Intelligent**: Understands session context from conversation history
+- **Surgical precision**: Handles mixed changes without data loss
+- **Confidence**: Clear preview before any destructive operations
 
 ## Development
 

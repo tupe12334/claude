@@ -117,7 +117,7 @@ describe('CLI Functions', () => {
     it('should skip if .gitignore already has all Claude Code entries', async () => {
       mockExistsSync.mockReturnValue(true)
       mockReadFileSync.mockReturnValue(
-        'node_modules/\n.claude-container/\neslint-report.json\n'
+        'node_modules/\n.claude-container/\n.claude-revert-backup-*/\neslint-report.json\n'
       )
 
       await setupGitignore()
@@ -151,6 +151,7 @@ describe('CLI Functions', () => {
 
       const callArg = String(mockAppendFileSync.mock.calls[0][1])
       expect(callArg).toContain('.claude-container/')
+      expect(callArg).toContain('.claude-revert-backup-*/')
       expect(callArg).toContain('eslint-report.json')
       expect(callArg).toContain('# Claude Code temporary files')
     })
