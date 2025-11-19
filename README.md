@@ -28,8 +28,10 @@ This will:
    - `/tupe:boot` - Project onboarding with service boot
    - `/tupe:project-onboard` - Comprehensive codebase learning
    - And more specialized workflow commands
-3. 🔧 Deploy the gitops agent to `.claude/agents/` for intelligent Git operations management
-4. 📝 Deploy the docs-reviewer agent to `.claude/agents/` for maintaining documentation quality
+3. 🔧 Deploy agents to `.claude/agents/`:
+   - **gitops** - Intelligent Git operations management
+   - **docs-reviewer** - Documentation quality control
+   - **package-maintainer** - User/org package update management
 
 ## What it does
 
@@ -50,6 +52,7 @@ This will:
   - **use-case-testing**: Create and test comprehensive use cases with Playwright for client features
 - **GitOps Agent**: Deploys an intelligent Git operations manager to `.claude/agents/` that handles commits with context awareness for monorepos, polyrepos, and submodules
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
+- **Package Maintainer Agent**: Deploys a package management specialist to `.claude/agents/` that intelligently handles updates to user-owned and org-owned packages, deciding where changes belong, creating PRs, and managing approval workflows
 
 ## Features
 
@@ -111,6 +114,31 @@ The included **docs-reviewer** agent ensures your documentation maintains the ri
 - **Paradigmatic Structures**: Shows folder organization patterns instead of exhaustive file listings
 - **Automatic Review**: Triggers when you create or update documentation files
 - **Smart Refactoring**: Converts overly-specific details into clear conceptual descriptions
+
+### Package Maintenance
+
+The **package-maintainer** agent provides intelligent management of your npm packages:
+
+- **Ownership Verification**: Automatically verifies package ownership (user or organization)
+- **Smart Repository Location**: Finds existing clones or intelligently determines where to clone based on workspace patterns
+- **Automatic Onboarding**: Runs `/tupe:project-onboard` to fully understand package structure before making changes
+- **Intelligent Decision Making**: Analyzes whether changes belong in the package or local code
+- **PR Workflow Management**: Creates pull requests, waits for your approval, and continues work after merge
+- **Version Management**: Handles version constraints and updates local projects after package updates
+- **Monorepo Support**: Works with monorepo packages and complex repository structures
+- **Local Development**: Supports npm/pnpm link for unpublished packages
+
+**Workflow**:
+
+1. Detects when a user/org package needs updating
+2. Locates or clones the package repository
+3. Onboards to understand package structure
+4. Decides with you whether to update package or local code
+5. Implements changes and validates (lint, test, build)
+6. Creates PR and notifies you with the URL
+7. Waits for your review and merge approval
+8. Updates local project once PR is merged
+9. Continues with original task
 
 ### Easy Setup
 
