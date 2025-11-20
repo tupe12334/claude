@@ -428,7 +428,7 @@ pnpm exec husky init
 Create `.husky/pre-push` file to run checks before pushing:
 
 ```bash
-. "$(dirname -- "$0")/_/husky.sh"
+
 
 echo "🔍 Running pre-push checks..."
 
@@ -486,7 +486,7 @@ Create `.lintstagedrc.json` for staged file linting:
 Create `.husky/pre-commit` for staged files:
 
 ```bash
-. "$(dirname -- "$0")/_/husky.sh"
+
 
 # Run lint-staged
 pnpm exec lint-staged
@@ -503,7 +503,7 @@ chmod +x .husky/pre-commit
 Create `.husky/commit-msg` for commit message linting:
 
 ```bash
-. "$(dirname -- "$0")/_/husky.sh"
+
 
 # Run commitlint on commit message
 pnpm exec commitlint --edit "$1"
