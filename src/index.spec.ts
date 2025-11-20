@@ -1,3 +1,4 @@
+/* eslint-disable ddd/require-spec-file */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { execSync } from 'child_process'
 import {
@@ -12,7 +13,7 @@ import {
   setupCommands,
   setupAgents,
   setupGitignore,
-} from '../index.js'
+} from './index.js'
 
 export class TestError extends Error {
   constructor(message: string) {

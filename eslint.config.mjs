@@ -7,4 +7,15 @@ export default [
   {
     ignores: ['dist/**', 'node_modules/**', '*.config.js', '*.config.mjs'],
   },
+  {
+    rules: {
+      'import/order': 'off',
+    },
+  },
+  {
+    files: ['**/*.json'],
+    rules: {
+      '@typescript-eslint/no-unused-expressions': 'off',
+    },
+  },
 ]
