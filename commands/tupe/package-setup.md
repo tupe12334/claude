@@ -342,13 +342,19 @@ pnpm-lock.yaml
 
 ### Step 4: Create cspell.json
 
-Spell checking configuration for the project:
+Spell checking configuration for the project with Hebrew support:
 
 ```json
 {
   "version": "0.2",
-  "language": "en",
+  "language": "en,he",
   "words": ["tupe", "pnpm", "vitest", "husky", "eslint", "tsconfig", "esbenp"],
+  "languageSettings": [
+    {
+      "languageId": "*",
+      "locale": "en,he"
+    }
+  ],
   "ignorePaths": [
     "node_modules",
     "dist",
@@ -359,7 +365,11 @@ Spell checking configuration for the project:
 }
 ```
 
-**Note**: Add project-specific words to the `words` array as needed.
+**Note**:
+
+- Hebrew language support is enabled via `language: "en,he"` and `languageSettings`
+- Add project-specific words to the `words` array as needed
+- The spell checker will now recognize both English and Hebrew text
 
 ### Step 5: Create commitlint.config.mjs
 
