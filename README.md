@@ -32,6 +32,7 @@ This will:
    - **gitops** - Intelligent Git operations management
    - **docs-reviewer** - Documentation quality control
    - **package-maintainer** - User/org package update management
+   - **lint-fixer** - Strategic lint error analysis and systematic fixing
 
 ## What it does
 
@@ -53,6 +54,7 @@ This will:
 - **GitOps Agent**: Deploys an intelligent Git operations manager to `.claude/agents/` that handles commits with context awareness for monorepos, polyrepos, and submodules
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
 - **Package Maintainer Agent**: Deploys a package management specialist to `.claude/agents/` that intelligently handles updates to user-owned and org-owned packages, deciding where changes belong, creating PRs, and managing approval workflows
+- **Lint Fixer Agent**: Deploys a strategic lint error analyzer to `.claude/agents/` that plans systematic fixing strategies, prioritizes errors intelligently, and ensures code quality throughout the fixing process
 
 ## Features
 
@@ -139,6 +141,36 @@ The **package-maintainer** agent provides intelligent management of your npm pac
 7. Waits for your review and merge approval
 8. Updates local project once PR is merged
 9. Continues with original task
+
+### Strategic Lint Error Fixing
+
+The **lint-fixer** agent provides intelligent analysis and systematic fixing of linting issues:
+
+- **Deep Error Analysis**: Categorizes errors by type, severity, and dependencies
+- **Strategic Planning**: Creates prioritized fixing plans based on impact and risk
+- **Smart Prioritization**: Safe fixes first, then complex changes; errors before warnings
+- **Dependency Detection**: Identifies which fixes might affect others
+- **Continuous Validation**: Runs tests and builds after each fix
+- **Progress Tracking**: Detailed reporting with comprehensive summaries
+- **Cascading Error Handling**: Immediately fixes new errors introduced during fixing
+- **Quality Assurance**: Ensures no regressions and functionality is preserved
+
+**Use Cases**:
+
+- 20+ lint errors requiring strategic planning
+- Complex codebases with error dependencies
+- Need detailed analysis before fixing
+- Want phased approach with progress tracking
+- Ensuring quality throughout the fixing process
+
+**Agent provides**:
+
+1. Comprehensive error analysis with categorization
+2. Strategic fixing plan with priorities
+3. Systematic execution (one fix at a time)
+4. Full validation after each change
+5. Detailed progress reports
+6. Final summary with learning documentation
 
 ### Easy Setup
 
