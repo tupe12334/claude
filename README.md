@@ -33,6 +33,7 @@ This will:
    - **docs-reviewer** - Documentation quality control
    - **package-maintainer** - User/org package update management
    - **lint-fixer** - Strategic lint error analysis and systematic fixing
+   - **dev-container** - Ready-to-work containerized development environment
 
 ## What it does
 
@@ -56,6 +57,7 @@ This will:
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
 - **Package Maintainer Agent**: Deploys a package management specialist to `.claude/agents/` that intelligently handles updates to user-owned and org-owned packages, deciding where changes belong, creating PRs, and managing approval workflows
 - **Lint Fixer Agent**: Deploys a strategic lint error analyzer to `.claude/agents/` that plans systematic fixing strategies, prioritizes errors intelligently, and ensures code quality throughout the fixing process
+- **Dev Container Agent**: Provides a fully configured containerized development environment with repository cloned, dependencies installed, GitHub CLI authenticated, and everything ready for immediate development work
 
 ## Features
 
@@ -172,6 +174,44 @@ The **lint-fixer** agent provides intelligent analysis and systematic fixing of 
 4. Full validation after each change
 5. Detailed progress reports
 6. Final summary with learning documentation
+
+### Ready-to-Work Development Containers
+
+The **dev-container** agent provides fully configured containerized development environments:
+
+- **Complete Setup**: Repository cloned, dependencies installed, tools authenticated
+- **Instant Productivity**: Start coding immediately without local environment setup
+- **Complete Isolation**: Work in isolated container without affecting local files
+- **Reproducible Environments**: Same setup every time, matches CI/CD
+- **Multi-Project Support**: Work on multiple projects or branches simultaneously
+- **Zero Local Impact**: Container removal deletes everything, local files pristine
+- **All Tools Ready**: Git configured, GitHub CLI authenticated, npm credentials set
+- **Interactive Shell**: Full terminal access for development, testing, debugging
+
+**Use Cases**:
+
+- Fresh development environment without local setup pollution
+- Testing changes safely without affecting local files
+- Debugging CI issues in identical environment
+- Onboarding new contributors instantly
+- Working on multiple feature branches in parallel
+- Experimenting with dependencies or configurations
+
+**Agent provides**:
+
+1. Detects project type and creates appropriate container (Node.js, Python, Go, Rust)
+2. Clones repository inside container
+3. Authenticates GitHub CLI and npm
+4. Configures git with your credentials
+5. Installs all project dependencies
+6. Provides interactive shell ready for development
+7. Optional: Persists work or keeps container running
+8. Optional: Port forwarding for development servers
+
+**Difference from container-pr**:
+
+- **container-pr**: Execute specific task → commit → push → create PR → exit
+- **dev-container**: Setup environment → give you shell → work freely → exit when done
 
 ### Easy Setup
 
