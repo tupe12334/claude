@@ -37,7 +37,7 @@ This will:
 ## What it does
 
 - **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
-- **Tupe Commands Suite**: Deploys 13 specialized commands to `.claude/commands/tupe/`:
+- **Tupe Commands Suite**: Deploys 14 specialized commands to `.claude/commands/tupe/`:
   - **container-pr**: Execute work in isolated Docker containers with automatic PR creation
   - **package-setup**: Initialize or validate package configuration with pnpm, vitest, and CI/CD
   - **lint**: Systematic ESLint error fixing with continuous verification
@@ -45,6 +45,7 @@ This will:
   - **boot**: Project onboarding with service initialization
   - **project-onboard**: Comprehensive codebase exploration and learning
   - **commit-push**: Smart git operations for session changes
+  - **open-pr**: Use gitops agent to create PR with session changes (multi-agent aware)
   - **ultrathink**: Deep thinking mode for complex tasks
   - **validate-feature**: Feature validation with comprehensive testing
   - **implement-and-validate**: Full TDD implementation cycle
@@ -454,6 +455,107 @@ Proceed? [Yes/Show diff/Cancel]
 - **Intelligent**: Understands session context from conversation history
 - **Surgical precision**: Handles mixed changes without data loss
 - **Confidence**: Clear preview before any destructive operations
+
+### `/tupe:open-pr` - Multi-Agent Aware Pull Request Creation
+
+Create a pull request with ONLY the changes made in the current conversation thread, using the gitops agent for intelligent session-aware commits:
+
+```bash
+# In Claude Code, simply run:
+/tupe:open-pr
+```
+
+**What it does**:
+
+1. **Session Change Analysis**:
+   - Reviews conversation history to identify YOUR specific changes
+   - Lists files you created, modified, or deleted in THIS thread
+   - Identifies files to skip (other agents' work, pre-existing changes)
+   - Creates a clear boundary between your work and others'
+
+2. **Multi-Agent Safety**:
+   - **Respects concurrent work**: Skips files modified by other agents
+   - **Preserves staged changes**: Doesn't touch files already staged by others
+   - **Session-scoped commits**: Only stages files you modified in this thread
+   - **Conflict avoidance**: Verifies git status before staging anything
+
+3. **GitOps Agent Invocation**:
+   - Spawns the gitops agent with your session change summary
+   - Provides explicit file list for verification
+   - Instructs agent to stage files individually (never `git add .`)
+   - Follows repository commit conventions automatically
+
+4. **PR Creation**:
+   - Creates feature branch with unique naming
+   - Commits with clear, conventional message
+   - Pushes to remote safely
+   - Opens pull request with comprehensive description
+   - Returns PR URL for review
+
+**Use Cases**:
+
+```text
+Scenario 1: Multiple agents working simultaneously
+→ Agent 1 (YOU): Adding authentication
+→ Agent 2: Updating dependencies
+→ Agent 3: Fixing a bug
+→ /tupe:open-pr creates PR with ONLY your auth changes
+
+Scenario 2: Mixed uncommitted changes
+→ Pre-existing changes: config.ts, utils.ts
+→ Your session changes: auth.ts, middleware.ts
+→ /tupe:open-pr includes only auth.ts and middleware.ts
+
+Scenario 3: Staged files by other developers
+→ Git status shows staged files you didn't touch
+→ /tupe:open-pr skips those and commits only your changes
+```
+
+**Example Output**:
+
+```text
+📊 Session Changes Identified
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Files modified in THIS session:
+  ✓ src/auth/middleware.ts (created)
+  ✓ src/auth/middleware.spec.ts (created)
+  ✓ src/index.ts (modified - added auth import)
+
+Files to SKIP (not yours):
+  ✗ package.json (modified by Agent 2)
+  ✗ src/utils/helper.ts (modified by Agent 3)
+  ✗ README.md (pre-existing changes)
+
+🤖 Invoking GitOps Agent
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Task: Create PR with session changes
+Files: 3 files to stage
+Branch: claude/auth-middleware-20251121
+
+✅ PR Created Successfully
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PR: https://github.com/user/repo/pull/123
+Title: feat(auth): add authentication middleware
+Status: Ready for review
+```
+
+**Benefits**:
+
+- **Multi-agent collaboration**: Work safely alongside other Claude agents
+- **Session awareness**: Only commits your specific changes
+- **Conflict prevention**: Automatically skips other agents' work
+- **Safety first**: Verifies each file before staging
+- **Clear boundaries**: Explicit file lists, no broad `git add .`
+- **GitOps powered**: Leverages sophisticated gitops agent intelligence
+- **Repository conventions**: Follows commit message and branch naming standards
+
+**Important Notes**:
+
+- Always review the session change list before proceeding
+- When unsure about a file, the command will ask for confirmation
+- The gitops agent performs additional safety checks
+- Works seamlessly with concurrent multi-agent workflows
+- Respects git hooks and pre-commit validations
 
 ## Development
 
