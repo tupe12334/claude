@@ -500,6 +500,13 @@ pnpm spell || {
   exit 1
 }
 
+# Check for unused code
+echo "🔍 Checking for unused code..."
+pnpm knip || {
+  echo "❌ Knip found unused code. Please review and fix."
+  exit 1
+}
+
 # Run tests
 echo "🧪 Running tests..."
 pnpm test --run || {
@@ -592,7 +599,7 @@ ls -la .husky/
 # Should show:
 # - pre-commit (runs lint-staged on staged files)
 # - commit-msg (validates commit message format)
-# - pre-push (runs full lint, format, spell, test checks)
+# - pre-push (runs full lint, format, spell, knip, test checks)
 
 # Test pre-commit hook manually
 git add .
@@ -622,6 +629,7 @@ echo "feat(test): testing commitlint" | .husky/commit-msg
    - Full project lint check
    - Full format check
    - Full spell check
+   - Full knip check (unused code detection)
    - All tests must pass
    - Ensures nothing broken is pushed
 
@@ -716,6 +724,9 @@ jobs:
 
       - name: Spell check
         run: pnpm spell
+
+      - name: Check for unused code
+        run: pnpm knip
 
       - name: Run tests with coverage
         run: pnpm test:coverage --run
@@ -853,6 +864,9 @@ jobs:
 
       - name: Spell check
         run: pnpm spell
+
+      - name: Check for unused code
+        run: pnpm knip
 
       - name: Run tests with coverage
         run: pnpm test:coverage --run
@@ -1096,7 +1110,7 @@ This project uses Husky for git hooks:
 
 - **Pre-commit**: Runs lint-staged (lints, formats, and spell-checks staged files)
 - **Commit-msg**: Validates commit message format using commitlint (enforces conventional commits)
-- **Pre-push**: Runs full validation (lint, format, spell check, tests)
+- **Pre-push**: Runs full validation (lint, format, spell, knip, tests)
 
 These hooks ensure code quality and consistent commit messages before commits and pushes.
 
@@ -1409,7 +1423,7 @@ Review and confirm:
 - ✅ .github/workflows/ci.yml exists
 - ✅ Workflow is valid YAML
 - ✅ Tests node versions 20, 22
-- ✅ Runs lint, format, spell, test with coverage, build
+- ✅ Runs lint, format, spell, knip, test with coverage, build
 - ✅ Uploads coverage reports to Codecov (if CODECOV_TOKEN set)
 - ✅ If publishable: Has publish job with NPM_TOKEN
 - ✅ If publishable: Publish only runs when package.json version changes
@@ -1506,7 +1520,7 @@ Version: X.X.X
 ✅ Git Hooks Configured:
   Pre-commit:  Runs lint-staged (lint, format, spell check staged files)
   Commit-msg:  Validates commit message format (conventional commits)
-  Pre-push:    Runs full validation (lint, format, spell, tests)
+  Pre-push:    Runs full validation (lint, format, spell, knip, tests)
 
 ✅ CI/CD Setup:
   - GitHub Actions workflow configured
