@@ -25,6 +25,7 @@ This will:
    - `/tupe:container-pr` - Containerized development with automatic PR creation
    - `/tupe:package-setup` - Initialize or validate package configuration
    - `/tupe:lint` - Systematic ESLint error fixing
+   - `/tupe:e2e-testing` - Automated end-to-end test generation
    - `/tupe:boot` - Project onboarding with service boot
    - `/tupe:project-onboard` - Comprehensive codebase learning
    - And more specialized workflow commands
@@ -33,15 +34,17 @@ This will:
    - **docs-reviewer** - Documentation quality control
    - **package-maintainer** - User/org package update management
    - **lint-fixer** - Strategic lint error analysis and systematic fixing
+   - **e2e-tester** - Comprehensive end-to-end test suite generation
    - **dev-container** - Ready-to-work containerized development environment
 
 ## What it does
 
 - **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
-- **Tupe Commands Suite**: Deploys 14 specialized commands to `.claude/commands/tupe/`:
+- **Tupe Commands Suite**: Deploys 15 specialized commands to `.claude/commands/tupe/`:
   - **container-pr**: Execute work in isolated Docker containers with automatic PR creation
   - **package-setup**: Initialize or validate package configuration with pnpm, vitest, and CI/CD
   - **lint**: Systematic ESLint error fixing with continuous verification
+  - **e2e-testing**: Automated generation of comprehensive end-to-end test suites for features
   - **revert**: Intelligently revert only current session changes while preserving other work
   - **boot**: Project onboarding with service initialization
   - **project-onboard**: Comprehensive codebase exploration and learning
@@ -57,6 +60,7 @@ This will:
 - **Docs Reviewer Agent**: Deploys a specialized agent to `.claude/agents/` that automatically reviews documentation to maintain proper abstraction levels, ensuring docs focus on concepts rather than implementation details
 - **Package Maintainer Agent**: Deploys a package management specialist to `.claude/agents/` that intelligently handles updates to user-owned and org-owned packages, deciding where changes belong, creating PRs, and managing approval workflows
 - **Lint Fixer Agent**: Deploys a strategic lint error analyzer to `.claude/agents/` that plans systematic fixing strategies, prioritizes errors intelligently, and ensures code quality throughout the fixing process
+- **E2E Tester Agent**: Specialized agent that analyzes feature requirements, specs, and implementation to create comprehensive, production-ready end-to-end test suites with fixtures, helpers, page objects, and complete documentation
 - **Dev Container Agent**: Provides a fully configured containerized development environment with repository cloned, dependencies installed, GitHub CLI authenticated, and everything ready for immediate development work
 
 ## Features
@@ -212,6 +216,45 @@ The **dev-container** agent provides fully configured containerized development 
 
 - **container-pr**: Execute specific task → commit → push → create PR → exit
 - **dev-container**: Setup environment → give you shell → work freely → exit when done
+
+### Automated End-to-End Test Generation
+
+The **e2e-tester** agent creates comprehensive, production-ready test suites for your features:
+
+- **Context-Aware**: Analyzes conversation history, specs, requirements, and implementation
+- **Framework Agnostic**: Supports Playwright, Cypress, Supertest, and other testing frameworks
+- **Comprehensive Coverage**: Generates tests for happy paths, error cases, edge cases, and integrations
+- **Best Practices**: Follows testing patterns, uses fixtures, creates helpers and page objects
+- **Production-Ready**: Includes setup/teardown, proper waits, error handling, and documentation
+- **Maintainable Code**: Clean, readable tests with descriptive names and good structure
+- **Complete Documentation**: Generates README with setup, running, and troubleshooting instructions
+
+**Use Cases**:
+
+- Automated test generation after feature completion
+- Ensuring comprehensive e2e coverage for critical features
+- Creating regression test suites for existing features
+- Standardizing test patterns across the project
+- CI/CD integration with automated testing
+- Documenting feature behavior through tests
+
+**Agent provides**:
+
+1. Analyzes session to identify feature and gather all relevant context
+2. Discovers and reads specification documents (requirements, design, tasks)
+3. Identifies all modified files and understands implementation
+4. Detects project testing framework and conventions
+5. Creates comprehensive test scenarios (happy paths, errors, edge cases, integration)
+6. Generates test files with fixtures, helpers, and page objects
+7. Ensures tests are independent, reliable, and deterministic
+8. Includes setup/teardown scripts and configuration
+9. Creates complete documentation for running and maintaining tests
+10. Validates coverage against acceptance criteria and requirements
+
+**Difference from use-case-testing**:
+
+- **use-case-testing**: Manual validation through Playwright MCP, interactive testing, fixes issues during development
+- **e2e-testing**: Automated test generation, creates permanent test files, CI/CD ready, long-term regression prevention
 
 ### Easy Setup
 
