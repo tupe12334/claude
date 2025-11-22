@@ -39,6 +39,9 @@ jobs:
       - name: Spell check
         run: pnpm spell
 
+      - name: Check for unused code
+        run: pnpm knip
+
       - name: Run tests with coverage
         run: pnpm test:coverage --run
 
