@@ -1030,6 +1030,9 @@ pnpm-debug.log*
 .claude-container/
 eslint-report.json
 
+# Playwright MCP
+.playwright-mcp/
+
 # Temporary files
 *.tmp
 .cache/
