@@ -10,6 +10,7 @@ import {
 } from 'fs'
 import {
   initializeCcSdd,
+  initializeCenty,
   setupCommands,
   setupAgents,
   setupGitignore,
@@ -60,6 +61,28 @@ describe('CLI Functions', () => {
 
       await expect(initializeCcSdd()).rejects.toThrow(
         'Failed to initialize cc-sdd'
+      )
+    })
+  })
+
+  describe('initializeCenty', () => {
+    it('should initialize centy using pnpm dlx', async () => {
+      mockExecSync.mockReturnValue(Buffer.from('success'))
+
+      await initializeCenty()
+
+      expect(mockExecSync).toHaveBeenCalledWith('pnpm dlx centy init', {
+        stdio: 'inherit',
+      })
+    })
+
+    it('should throw error if initialization fails', async () => {
+      mockExecSync.mockImplementation(() => {
+        throw new TestError('Initialization failed')
+      })
+
+      await expect(initializeCenty()).rejects.toThrow(
+        'Failed to initialize centy'
       )
     })
   })

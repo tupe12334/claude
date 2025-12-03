@@ -2,6 +2,7 @@
 
 import {
   initializeCcSdd,
+  initializeCenty,
   setupCommands,
   setupAgents,
   setupGitignore,
@@ -13,6 +14,9 @@ async function main(): Promise<void> {
 
     // Initialize cc-sdd to generate Claude Code files
     await initializeCcSdd()
+
+    // Initialize centy for context management
+    await initializeCenty()
 
     // Setup custom commands
     await setupCommands()
