@@ -1,6 +1,6 @@
 # @tupe12334/claude
 
-A CLI tool that initializes `cc-sdd` and sets up custom tupe commands in the `.claude` folder for automated linting fixes and documentation quality control.
+A CLI tool that sets up custom tupe commands in the `.claude` folder for automated linting fixes and documentation quality control.
 
 [![CI/CD](https://github.com/tupe12334/claude/actions/workflows/ci.yml/badge.svg)](https://github.com/tupe12334/claude/actions/workflows/ci.yml)
 
@@ -20,8 +20,7 @@ claude
 
 This will:
 
-1. 📦 Initialize `cc-sdd` using `pnpm dlx` to generate Claude Code configuration files
-2. ⚙️ Deploy tupe commands to `.claude/commands/tupe/`:
+1. ⚙️ Deploy tupe commands to `.claude/commands/tupe/`:
    - `/tupe:container-pr` - Containerized development with automatic PR creation
    - `/tupe:package-setup` - Initialize or validate package configuration
    - `/tupe:lint` - Systematic ESLint error fixing
@@ -29,7 +28,7 @@ This will:
    - `/tupe:boot` - Project onboarding with service boot
    - `/tupe:project-onboard` - Comprehensive codebase learning
    - And more specialized workflow commands
-3. 🔧 Deploy agents to `.claude/agents/`:
+2. 🔧 Deploy agents to `.claude/agents/`:
    - **gitops** - Intelligent Git operations management
    - **docs-reviewer** - Documentation quality control
    - **package-maintainer** - User/org package update management
@@ -39,7 +38,6 @@ This will:
 
 ## What it does
 
-- **Initializes cc-sdd**: Runs `cc-sdd` via `pnpm dlx` to generate Claude Code configuration files without adding it as a project dependency
 - **Tupe Commands Suite**: Deploys 15 specialized commands to `.claude/commands/tupe/`:
   - **container-pr**: Execute work in isolated Docker containers with automatic PR creation
   - **package-setup**: Initialize or validate package configuration with pnpm, vitest, and CI/CD

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import {
-  initializeCcSdd,
   initializeCenty,
   setupCommands,
   setupAgents,
@@ -11,9 +10,6 @@ import {
 async function main(): Promise<void> {
   try {
     console.log('🚀 Initializing @tupe12334/claude...')
-
-    // Initialize cc-sdd to generate Claude Code files
-    await initializeCcSdd()
 
     // Initialize centy for context management
     await initializeCenty()

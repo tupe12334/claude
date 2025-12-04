@@ -1,7 +1,7 @@
 {
   "name": "@tupe12334/claude",
-  "version": "2.0.0",
-  "description": "A CLI tool that initializes cc-sdd and sets up custom tupe commands and agents in .claude folder for automated linting fixes and documentation quality control",
+  "version": "2.0.1",
+  "description": "A CLI tool that sets up custom tupe commands and agents in .claude folder for automated linting fixes and documentation quality control",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -32,7 +32,6 @@
   "keywords": [
     "cli",
     "claude",
-    "cc-sdd",
     "automation"
   ],
   "author": "tupe12334",

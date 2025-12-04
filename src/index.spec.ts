@@ -9,7 +9,6 @@ import {
   writeFileSync,
 } from 'fs'
 import {
-  initializeCcSdd,
   initializeCenty,
   setupCommands,
   setupAgents,
@@ -40,29 +39,6 @@ describe('CLI Functions', () => {
 
   afterEach(() => {
     vi.restoreAllMocks()
-  })
-
-  describe('initializeCcSdd', () => {
-    it('should initialize cc-sdd using pnpm dlx with auto-responses', async () => {
-      mockExecSync.mockReturnValue(Buffer.from('success'))
-
-      await initializeCcSdd()
-
-      expect(mockExecSync).toHaveBeenCalledWith('pnpm dlx cc-sdd', {
-        input: 'n\n',
-        stdio: ['pipe', 'inherit', 'inherit'],
-      })
-    })
-
-    it('should throw error if initialization fails', async () => {
-      mockExecSync.mockImplementation(() => {
-        throw new TestError('Initialization failed')
-      })
-
-      await expect(initializeCcSdd()).rejects.toThrow(
-        'Failed to initialize cc-sdd'
-      )
-    })
   })
 
   describe('initializeCenty', () => {
