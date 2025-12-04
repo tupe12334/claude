@@ -33,7 +33,6 @@ Continue with the current task at hand using deep, methodical thinking and analy
    - Examine recent commit history for context
 
 2. **Continue with the current task**:
-   - If there are incomplete tasks, continue implementation
    - If there are uncommitted changes, analyze what's being worked on and continue
    - If unclear what the current task is, ask the user for clarification
    - Use all available context to understand the state and continue purposefully

@@ -41,11 +41,6 @@ Conduct a comprehensive exploration and learning session about the current proje
    - Review any CONTRIBUTING.md or DEVELOPMENT.md files
    - Check CHANGELOG.md or release notes for recent changes
 
-2. **Review Active Specifications** (if they exist):
-   - Check for active feature development
-   - Read requirements, design, and tasks documents
-   - Understand current development priorities
-
 ### Phase 2: Project Configuration Analysis
 
 1. **Package Management**:

@@ -14,33 +14,57 @@ Executes ALL pending tasks using TDD methodology, then runs comprehensive valida
 
 This command combines:
 
-1. **Implementation Phase**: Execute all pending spec tasks using TDD
+1. **Implementation Phase**: Execute all pending tasks using TDD methodology
 2. **Validation Phase**: Comprehensive feature validation with testing (`/tupe:validate-feature`)
 
 ## Prerequisites Check
 
-Validate that the specification is ready for implementation:
+Before implementation, gather context about the feature:
 
-**Required Files**:
+**Look for documentation in**:
 
-- Feature requirements documentation
-- Technical design documentation
-- Implementation tasks list
+- `docs/` directory - Feature documentation
+- `specifications/` or `specs/` - Specification documents
+- `README.md` - Feature descriptions
+- Code comments and existing implementation
+
+**If no documentation exists**:
+
+- Work with user to define requirements
+- Infer scope from conversation context
+- Document decisions as you implement
 
 ---
 
-## Phase 1: TDD Implementation (All Tasks)
+## Phase 1: Context Loading
+
+Load project context for implementation:
+
+### Project Documentation
+
+- Check for architecture docs, tech stack docs, coding conventions
+- Review existing patterns in the codebase
+- Understand project structure and organization
+
+### Feature Context
+
+- Gather requirements from documentation or conversation
+- Understand the scope of what needs to be implemented
+- Identify acceptance criteria
+
+---
+
+## Phase 2: TDD Implementation (All Tasks)
 
 Execute **ALL pending tasks** (unchecked `- [ ]` items) using strict Test-Driven Development methodology.
 
 ### Task Identification
 
-Parse the tasks list to identify:
+Identify tasks from documentation, conversation, or create a task breakdown:
 
-- Total tasks: [count all checkbox items]
-- Completed tasks: [count `- [x]` items]
-- Pending tasks: [count `- [ ]` items]
-- Task list: [extract all pending task numbers and descriptions]
+- Break the feature into discrete, implementable tasks
+- Prioritize tasks by dependencies
+- Estimate complexity of each task
 
 **Output Example**:
 
@@ -66,7 +90,7 @@ For each pending task in sequential order:
 
 **Before any implementation code**:
 
-- Analyze task requirements from task details
+- Analyze task requirements from tasks.md details
 - Reference requirements and design documents for expected behavior
 - Write comprehensive test cases covering:
   - Happy path scenarios
@@ -78,7 +102,7 @@ For each pending task in sequential order:
 **Test File Naming**:
 
 - Follow project conventions
-- Common pattern: `*.spec.ts` files next to implementation (DDD approach)
+- Common pattern: `*.spec.ts` files next to implementation
 - Place tests next to the logic they test for better discoverability
 
 #### 2. GREEN Phase - Minimal Implementation
@@ -86,8 +110,8 @@ For each pending task in sequential order:
 **Write just enough code to pass the tests**:
 
 - Implement ONLY what the current task requires
-- Follow design document specifications strictly
-- Use project patterns and conventions
+- Follow design specifications if available
+- Use existing project patterns and conventions
 - Aim for simplest solution that passes tests
 - No premature optimization
 - No extra features beyond task scope
@@ -159,11 +183,7 @@ For each pending task in sequential order:
 
 **After successful verification**:
 
-- Update tasks: change `- [ ]` to `- [x]` for completed task
-- Example:
-  ```markdown
-  - [x] 2.1 Create user CRUD operations
-  ```
+- Track task completion using TodoWrite tool
 - Commit the implementation with descriptive message:
 
   ```bash
@@ -239,7 +259,7 @@ Next task...
 
 ---
 
-## Phase 2: Comprehensive Validation
+## Phase 3: Comprehensive Validation
 
 After implementation completes, run **ultra-thorough validation** using the same methodology as `/tupe:validate-feature`.
 
@@ -256,7 +276,7 @@ Execute six-phase comprehensive validation:
 
 ---
 
-### Phase 2.1: Documentation Discovery
+### Phase 3.1: Documentation Discovery
 
 **Adaptive Documentation Search** - works with ANY project structure:
 
@@ -264,7 +284,7 @@ Execute six-phase comprehensive validation:
 
 - `README*.md` - Feature descriptions
 - `docs/**/*.md` - Documentation folders
-- `specifications/**/*.md` or `specs/**/*.md` - Specification documents
+- `specifications/**/*.md` or `specs/**/*.md` - Specs
 - `design/**/*.md` - Design documents
 - `*.md` files in project root
 - Code comments and JSDoc/TSDoc
@@ -276,7 +296,7 @@ Execute six-phase comprehensive validation:
 3. Identify requirements, acceptance criteria, success metrics
 4. Note any project-level architecture/tech/product docs
 
-**Fallback**: If minimal documentation, infer from code.
+**Fallback**: If minimal documentation, infer from code and conversation context.
 
 **Documentation Quality Assessment**:
 
@@ -288,7 +308,7 @@ Execute six-phase comprehensive validation:
 
 ---
 
-### Phase 2.2: Codebase Deep Dive
+### Phase 3.2: Codebase Deep Dive
 
 **Implementation Discovery** (use Task tool with Explore agent, "very thorough"):
 
@@ -305,7 +325,7 @@ Execute six-phase comprehensive validation:
 
 **Architecture**:
 
-- Alignment with project patterns
+- Alignment with existing project patterns
 - Modularity and separation of concerns
 - Component boundaries and responsibilities
 - Dependency management
@@ -371,11 +391,11 @@ Execute six-phase comprehensive validation:
 
 ---
 
-### Phase 2.3: Behavioral & Requirements Analysis
+### Phase 3.3: Behavioral & Requirements Analysis
 
 **Expected Behavior Extraction**:
 
-From requirements documentation:
+From documentation and conversation context:
 
 - Core functionality requirements
 - User stories and use cases
@@ -388,7 +408,7 @@ From requirements documentation:
 **Implementation Verification**:
 
 **Requirements Traceability**:
-For each requirement in the requirements document:
+For each identified requirement:
 
 ```
 REQ-X.X: [Requirement description]
@@ -408,7 +428,7 @@ Notes: [Any deviations, concerns, or limitations]
 
 ---
 
-### Phase 2.4: Interactive Testing with Playwright
+### Phase 3.4: Interactive Testing with Playwright
 
 **Test Planning**:
 
@@ -650,7 +670,7 @@ Overall: 93% tests passed (3 issues found)
 
 ---
 
-### Phase 2.5: Bug Analysis & Issue Identification
+### Phase 3.5: Bug Analysis & Issue Identification
 
 **Comprehensive Bug Detection**:
 
@@ -861,7 +881,7 @@ Technical details:
 
 ---
 
-### Phase 2.6: Comprehensive Report Generation
+### Phase 3.6: Comprehensive Report Generation
 
 **CRITICAL**: Output report directly to user. Do NOT create files in repository.
 
@@ -916,15 +936,9 @@ Generate detailed validation report with the following structure:
 
 ### Documentation Analysis
 
-**Specification Documentation**:
-
-- ✅ Requirements: requirements documentation (X requirements)
-- ✅ Design: technical design documentation
-- ✅ Tasks: implementation tasks (X tasks, all completed)
-
-**Additional Documentation Found**:
-[List any other docs found: README sections, code comments, API docs, etc.]
-OR: "⚠️ No additional documentation found"
+**Documentation Found**:
+[List all docs found: README sections, code comments, API docs, specs, etc.]
+OR: "⚠️ Limited documentation found"
 
 **Documentation Quality**: Excellent / Good / Fair / Poor
 
@@ -947,7 +961,7 @@ OR: "⚠️ No additional documentation found"
 
 **Assessment**:
 
-- Follows project patterns: [Yes/No/Partially]
+- Follows existing project patterns: [Yes/No/Partially]
 - Integration points properly implemented: [assessment]
 - Modularity and separation of concerns: [assessment]
 - Dependencies managed appropriately: [assessment]
@@ -1138,7 +1152,7 @@ OR: "⚠️ No additional documentation found"
 
 **Requirements Traceability**:
 
-For each requirement from the requirements documentation:
+For each identified requirement:
 
 ```
 REQ-1.1: [Requirement description]
@@ -1501,9 +1515,9 @@ Additionally, test coverage is only 34%, security concerns exist, and performanc
 
 ---
 
-## Phase 3: Final Status Update
+## Phase 4: Final Status Update
 
-After validation report is delivered:
+After validation report is delivered, update spec metadata:
 
 **Final Output**:
 
@@ -1540,16 +1554,16 @@ Next steps: [Based on production readiness assessment]
 
 **Prerequisites**:
 
-- Requirements, design, and tasks documentation must exist
-- Feature must be ready for implementation
+- Feature scope must be understood (from docs or conversation)
+- Tasks must be identified (from docs or created during planning)
 
 **What it does**:
 
-1. ✅ Validates requirements are ready
-2. 📚 Loads all context
+1. ✅ Gathers feature context
+2. 📚 Loads project documentation
 3. 🔨 Implements ALL pending tasks using TDD
 4. 🧪 Tests each task thoroughly
-5. ✅ Marks tasks complete
+5. ✅ Tracks task completion
 6. 🔍 Validates implementation comprehensively
 7. 🐛 Identifies bugs and issues
 8. 📊 Generates production readiness report

@@ -336,7 +336,7 @@ import publishablePackageJson from 'eslint-config-publishable-package-json'
 
 export default [
   ...agentConfig,
-  ...publishablePackageJson,
+  publishablePackageJson,
   {
     ignores: ['dist/**', 'node_modules/**', '*.config.js', '*.config.mjs'],
   },
@@ -1032,6 +1032,9 @@ pnpm-debug.log*
 # Claude Code temporary files
 .claude-container/
 eslint-report.json
+
+# Playwright MCP
+.playwright-mcp/
 
 # Temporary files
 *.tmp
