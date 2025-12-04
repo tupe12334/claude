@@ -1,6 +1,6 @@
 {
   "name": "@tupe12334/claude",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A CLI tool that sets up custom tupe commands and agents in .claude folder for automated linting fixes and documentation quality control",
   "type": "module",
   "main": "./dist/index.js",
