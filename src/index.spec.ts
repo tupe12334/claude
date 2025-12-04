@@ -49,7 +49,7 @@ describe('CLI Functions', () => {
       await initializeCcSdd()
 
       expect(mockExecSync).toHaveBeenCalledWith('pnpm dlx cc-sdd', {
-        input: 'y\n'.repeat(10) + 'n\n',
+        input: 'n\n',
         stdio: ['pipe', 'inherit', 'inherit'],
       })
     })

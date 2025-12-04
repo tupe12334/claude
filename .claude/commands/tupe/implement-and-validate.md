@@ -14,7 +14,7 @@ Executes ALL pending tasks using TDD methodology, then runs comprehensive valida
 
 This command combines:
 
-1. **Implementation Phase**: Execute all pending spec tasks using TDD (`/kiro:spec-impl`)
+1. **Implementation Phase**: Execute all pending spec tasks using TDD
 2. **Validation Phase**: Comprehensive feature validation with testing (`/tupe:validate-feature`)
 
 ## Prerequisites Check
@@ -23,61 +23,19 @@ Validate that the specification is ready for implementation:
 
 **Required Files**:
 
-- `.kiro/specs/$1/spec.json` - Spec metadata
-- `.kiro/specs/$1/requirements.md` - Feature requirements
-- `.kiro/specs/$1/design.md` - Technical design
-- `.kiro/specs/$1/tasks.md` - Implementation tasks
-
-**Approval Validation**:
-
-- Check `spec.json` for approval status
-- Ensure tasks phase is complete: `phase: "tasks-generated"` or later
-- If approvals missing: Stop with error message:
-
-  ```
-  ❌ Specification not ready for implementation
-
-  Run these commands first:
-  1. /kiro:spec-requirements $1
-  2. /kiro:spec-design $1
-  3. /kiro:spec-tasks $1
-
-  Or use -y flag to auto-approve: /kiro:spec-tasks $1 -y
-  ```
+- Feature requirements documentation
+- Technical design documentation
+- Implementation tasks list
 
 ---
 
-## Phase 1: Context Loading
-
-Load complete project context for implementation:
-
-### Core Steering Documents
-
-- @.kiro/steering/structure.md - File organization, naming, code patterns
-- @.kiro/steering/tech.md - Technology stack, frameworks, libraries
-- @.kiro/steering/product.md - Business context, product vision
-
-### Custom Steering Documents
-
-- Load ALL additional `*.md` files in `.kiro/steering/` directory (excluding core files above)
-- Examples: `api.md`, `testing.md`, `security.md`, etc.
-
-### Specification Documents for $1
-
-- @.kiro/specs/$1/spec.json - Metadata and approval tracking
-- @.kiro/specs/$1/requirements.md - EARS-format requirements
-- @.kiro/specs/$1/design.md - Technical design document
-- @.kiro/specs/$1/tasks.md - Implementation tasks with checkboxes
-
----
-
-## Phase 2: TDD Implementation (All Tasks)
+## Phase 1: TDD Implementation (All Tasks)
 
 Execute **ALL pending tasks** (unchecked `- [ ]` items) using strict Test-Driven Development methodology.
 
 ### Task Identification
 
-Parse `tasks.md` to identify:
+Parse the tasks list to identify:
 
 - Total tasks: [count all checkbox items]
 - Completed tasks: [count `- [x]` items]
@@ -108,7 +66,7 @@ For each pending task in sequential order:
 
 **Before any implementation code**:
 
-- Analyze task requirements from tasks.md details
+- Analyze task requirements from task details
 - Reference requirements and design documents for expected behavior
 - Write comprehensive test cases covering:
   - Happy path scenarios
@@ -119,7 +77,7 @@ For each pending task in sequential order:
 
 **Test File Naming**:
 
-- Follow project conventions from `structure.md`
+- Follow project conventions
 - Common pattern: `*.spec.ts` files next to implementation (DDD approach)
 - Place tests next to the logic they test for better discoverability
 
@@ -129,8 +87,7 @@ For each pending task in sequential order:
 
 - Implement ONLY what the current task requires
 - Follow design document specifications strictly
-- Use project patterns from `structure.md`
-- Follow tech stack conventions from `tech.md`
+- Use project patterns and conventions
 - Aim for simplest solution that passes tests
 - No premature optimization
 - No extra features beyond task scope
@@ -202,7 +159,7 @@ For each pending task in sequential order:
 
 **After successful verification**:
 
-- Update tasks.md: change `- [ ]` to `- [x]` for completed task
+- Update tasks: change `- [ ]` to `- [x]` for completed task
 - Example:
   ```markdown
   - [x] 2.1 Create user CRUD operations
@@ -218,8 +175,6 @@ For each pending task in sequential order:
   - Added [feature/component]
   - Implemented [functionality]
   - Tests: [test coverage added]
-
-  Task: X.Y from .kiro/specs/$1/tasks.md
 
   🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
@@ -284,7 +239,7 @@ Next task...
 
 ---
 
-## Phase 3: Comprehensive Validation
+## Phase 2: Comprehensive Validation
 
 After implementation completes, run **ultra-thorough validation** using the same methodology as `/tupe:validate-feature`.
 
@@ -301,7 +256,7 @@ Execute six-phase comprehensive validation:
 
 ---
 
-### Phase 3.1: Documentation Discovery
+### Phase 2.1: Documentation Discovery
 
 **Adaptive Documentation Search** - works with ANY project structure:
 
@@ -309,8 +264,7 @@ Execute six-phase comprehensive validation:
 
 - `README*.md` - Feature descriptions
 - `docs/**/*.md` - Documentation folders
-- `.kiro/specs/$1/**/*.md` - Kiro specification (our source of truth)
-- `specifications/**/*.md` or `specs/**/*.md` - Other specs
+- `specifications/**/*.md` or `specs/**/*.md` - Specification documents
 - `design/**/*.md` - Design documents
 - `*.md` files in project root
 - Code comments and JSDoc/TSDoc
@@ -322,7 +276,7 @@ Execute six-phase comprehensive validation:
 3. Identify requirements, acceptance criteria, success metrics
 4. Note any project-level architecture/tech/product docs
 
-**Fallback**: If minimal documentation, use `.kiro/specs/$1/` as primary source and infer from code.
+**Fallback**: If minimal documentation, infer from code.
 
 **Documentation Quality Assessment**:
 
@@ -334,7 +288,7 @@ Execute six-phase comprehensive validation:
 
 ---
 
-### Phase 3.2: Codebase Deep Dive
+### Phase 2.2: Codebase Deep Dive
 
 **Implementation Discovery** (use Task tool with Explore agent, "very thorough"):
 
@@ -351,7 +305,7 @@ Execute six-phase comprehensive validation:
 
 **Architecture**:
 
-- Alignment with project patterns from `structure.md`
+- Alignment with project patterns
 - Modularity and separation of concerns
 - Component boundaries and responsibilities
 - Dependency management
@@ -417,11 +371,11 @@ Execute six-phase comprehensive validation:
 
 ---
 
-### Phase 3.3: Behavioral & Requirements Analysis
+### Phase 2.3: Behavioral & Requirements Analysis
 
 **Expected Behavior Extraction**:
 
-From `.kiro/specs/$1/requirements.md` and other documentation:
+From requirements documentation:
 
 - Core functionality requirements
 - User stories and use cases
@@ -434,10 +388,10 @@ From `.kiro/specs/$1/requirements.md` and other documentation:
 **Implementation Verification**:
 
 **Requirements Traceability**:
-For each requirement in `requirements.md`:
+For each requirement in the requirements document:
 
 ```
-REQ-X.X: [Requirement description from requirements.md]
+REQ-X.X: [Requirement description]
 Status: ✅ Implemented / ⚠️ Partial / ❌ Missing
 Implementation: [file:line references]
 Tests: [test file references covering this requirement]
@@ -454,7 +408,7 @@ Notes: [Any deviations, concerns, or limitations]
 
 ---
 
-### Phase 3.4: Interactive Testing with Playwright
+### Phase 2.4: Interactive Testing with Playwright
 
 **Test Planning**:
 
@@ -696,7 +650,7 @@ Overall: 93% tests passed (3 issues found)
 
 ---
 
-### Phase 3.5: Bug Analysis & Issue Identification
+### Phase 2.5: Bug Analysis & Issue Identification
 
 **Comprehensive Bug Detection**:
 
@@ -907,7 +861,7 @@ Technical details:
 
 ---
 
-### Phase 3.6: Comprehensive Report Generation
+### Phase 2.6: Comprehensive Report Generation
 
 **CRITICAL**: Output report directly to user. Do NOT create files in repository.
 
@@ -955,22 +909,22 @@ Generate detailed validation report with the following structure:
 - **Files created/modified**: X files (list key files with file:line counts)
 - **Lines of code**: ~XXX LOC implementation, ~XXX LOC tests
 - **Test coverage**: XX% (or "Not measured")
-- **Tasks completed**: All X/X tasks from .kiro/specs/$1/tasks.md ✅
-- **Documentation found**: [List docs found or "Limited documentation outside spec"]
+- **Tasks completed**: All X/X tasks ✅
+- **Documentation found**: [List docs found or "Limited documentation"]
 
 ---
 
 ### Documentation Analysis
 
-**Specification Documentation** (Kiro):
+**Specification Documentation**:
 
-- ✅ Requirements: .kiro/specs/$1/requirements.md (X requirements)
-- ✅ Design: .kiro/specs/$1/design.md (detailed technical design)
-- ✅ Tasks: .kiro/specs/$1/tasks.md (X tasks, all completed)
+- ✅ Requirements: requirements documentation (X requirements)
+- ✅ Design: technical design documentation
+- ✅ Tasks: implementation tasks (X tasks, all completed)
 
 **Additional Documentation Found**:
 [List any other docs found: README sections, code comments, API docs, etc.]
-OR: "⚠️ No additional documentation found outside Kiro spec"
+OR: "⚠️ No additional documentation found"
 
 **Documentation Quality**: Excellent / Good / Fair / Poor
 
@@ -993,7 +947,7 @@ OR: "⚠️ No additional documentation found outside Kiro spec"
 
 **Assessment**:
 
-- Follows project patterns from .kiro/steering/structure.md: [Yes/No/Partially]
+- Follows project patterns: [Yes/No/Partially]
 - Integration points properly implemented: [assessment]
 - Modularity and separation of concerns: [assessment]
 - Dependencies managed appropriately: [assessment]
@@ -1184,7 +1138,7 @@ OR: "⚠️ No additional documentation found outside Kiro spec"
 
 **Requirements Traceability**:
 
-For each requirement from `.kiro/specs/$1/requirements.md`:
+For each requirement from the requirements documentation:
 
 ```
 REQ-1.1: [Requirement description]
@@ -1547,21 +1501,9 @@ Additionally, test coverage is only 34%, security concerns exist, and performanc
 
 ---
 
-## Phase 4: Final Status Update
+## Phase 3: Final Status Update
 
-After validation report is delivered, update spec metadata:
-
-**Update `.kiro/specs/$1/spec.json`**:
-
-```json
-{
-  "phase": "implementation-complete",
-  "implementation_ready": true,
-  "validated": true,
-  "validation_date": "[ISO 8601 timestamp]",
-  "updated_at": "[ISO 8601 timestamp]"
-}
-```
+After validation report is delivered:
 
 **Final Output**:
 
@@ -1598,16 +1540,16 @@ Next steps: [Based on production readiness assessment]
 
 **Prerequisites**:
 
-- Spec must exist in `.kiro/specs/[feature-name]/`
-- Requirements, design, and tasks must be generated and approved
+- Requirements, design, and tasks documentation must exist
+- Feature must be ready for implementation
 
 **What it does**:
 
-1. ✅ Validates spec is ready
-2. 📚 Loads all context (steering + spec)
+1. ✅ Validates requirements are ready
+2. 📚 Loads all context
 3. 🔨 Implements ALL pending tasks using TDD
 4. 🧪 Tests each task thoroughly
-5. ✅ Marks tasks complete in tasks.md
+5. ✅ Marks tasks complete
 6. 🔍 Validates implementation comprehensively
 7. 🐛 Identifies bugs and issues
 8. 📊 Generates production readiness report

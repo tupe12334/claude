@@ -6,9 +6,8 @@ export async function initializeCcSdd(): Promise<void> {
   console.log('📝 Auto-accepting all files except CLAUDE.md...')
 
   try {
-    // Answer 'y' to all kiro commands (10 files) and 'n' to CLAUDE.md
-    // This automatically overwrites all .claude/commands/kiro/* files but skips CLAUDE.md
-    const responses = 'y\n'.repeat(10) + 'n\n'
+    // Answer 'n' to CLAUDE.md to skip overwriting it
+    const responses = 'n\n'
     execSync('pnpm dlx cc-sdd', {
       input: responses,
       stdio: ['pipe', 'inherit', 'inherit'],
