@@ -791,34 +791,29 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Check if version changed
+      - name: Check if should publish
         id: version_check
         run: |
-          # Get current version from package.json
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
+          echo "Package: $PACKAGE_NAME@$CURRENT_VERSION"
 
-          # Get version from previous commit
-          git checkout HEAD~1 package.json 2>/dev/null || echo "No previous commit"
-          PREV_VERSION=$(node -p "require('./package.json').version" 2>/dev/null || echo "none")
-          echo "Previous version: $PREV_VERSION"
+          # Check if this exact version exists on npm
+          PUBLISHED_VERSION=$(npm view "$PACKAGE_NAME@$CURRENT_VERSION" version 2>/dev/null || echo "")
 
-          # Restore current package.json
-          git checkout HEAD package.json
-
-          # Compare versions
-          if [ "$CURRENT_VERSION" != "$PREV_VERSION" ]; then
-            echo "Version changed from $PREV_VERSION to $CURRENT_VERSION"
+          if [ -z "$PUBLISHED_VERSION" ]; then
+            echo "Version $CURRENT_VERSION not found on npm, will publish"
             echo "should_publish=true" >> $GITHUB_OUTPUT
           else
-            echo "Version unchanged, skipping publish"
+            echo "Version $CURRENT_VERSION already published, skipping"
             echo "should_publish=false" >> $GITHUB_OUTPUT
           fi
 
@@ -842,20 +837,63 @@ jobs:
         if: steps.version_check.outputs.should_publish == 'true'
         run: pnpm build
 
-      - name: Publish to npm
+      - name: Publish to npm (OIDC trusted publishing)
         if: steps.version_check.outputs.should_publish == 'true'
-        run: pnpm publish --access public --no-git-checks
+        run: pnpm publish --provenance --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-**Version Change Detection**:
+**OIDC Trusted Publishing (Recommended)**:
 
-The publish job includes a smart version change check that:
+Since December 2025, npm classic tokens have been permanently revoked. The recommended approach for CI/CD publishing is **OIDC trusted publishing**, which eliminates the need for long-lived secrets:
 
-- Compares the current package.json version with the previous commit's version
-- Only publishes to npm when the version has actually changed
-- Skips all publish steps (saving CI time) if the version is unchanged
+1. **Configure trusted publishing on npmjs.com**:
+   - Go to your package settings on npmjs.com
+   - Navigate to "Publishing Access" > "Trusted Publishing"
+   - Add your GitHub repository and workflow file
+   - This links your GitHub Actions workflow directly to your npm package
+
+2. **Remove the NPM_TOKEN secret**: Once OIDC is configured, the `NODE_AUTH_TOKEN` env var is no longer needed. Remove it from the workflow:
+
+```yaml
+- name: Publish to npm (OIDC trusted publishing)
+  if: steps.version_check.outputs.should_publish == 'true'
+  run: pnpm publish --provenance --access public --no-git-checks
+```
+
+3. **Benefits of OIDC**:
+   - No secrets to manage or rotate
+   - No token expiration issues (granular write tokens expire after max 90 days)
+   - Provenance attestation (`--provenance` flag) for supply chain security
+   - More secure: no long-lived credentials that can be leaked
+
+**Fallback: Granular Access Tokens**:
+
+If OIDC trusted publishing isn't available (e.g., private packages, older npm registry), use granular access tokens instead of the deprecated classic tokens:
+
+```bash
+# Create a granular access token via npm CLI
+npm token create --token-type=granular
+
+# Or create via npmjs.com: Settings > Access Tokens > Generate New Token > Granular Access Token
+# Configure: package scope, read-write permissions, expiration (max 90 days for write)
+# Enable "Bypass 2FA" for CI/CD automation
+
+# Add to GitHub secrets:
+gh secret set NPM_TOKEN
+```
+
+**Important**: Granular write tokens expire after a maximum of 90 days. You must rotate them before expiration or your CI/CD publishing will break. OIDC trusted publishing avoids this problem entirely.
+
+**Publish Detection**:
+
+The publish job checks the npm registry to decide whether to publish:
+
+- Queries npm for the exact version in package.json
+- Publishes if the version doesn't exist on npm (new version or first publish)
+- Skips all publish steps if the version is already published
+- Handles first-time publishes automatically (package not yet on npm)
 - Prevents accidental duplicate publishes of the same version
 
 This means you **must bump the version** in package.json before merging to main for a publish to occur. You can either:
@@ -945,9 +983,10 @@ gh secret list
 
 # For publishable packages
 if [ "$PUBLISHABLE" = "true" ]; then
-  echo "⚠️  Required secrets for publishable packages:"
-  echo "   - NPM_TOKEN (for npm publishing)"
-  echo "   - CODECOV_TOKEN (for coverage reports)"
+  echo "⚠️  Publishing setup for publishable packages:"
+  echo "   RECOMMENDED: Configure OIDC trusted publishing on npmjs.com (no secrets needed)"
+  echo "   FALLBACK: NPM_TOKEN (granular access token, max 90-day expiration for write)"
+  echo "   OPTIONAL: CODECOV_TOKEN (for coverage reports)"
 else
   echo "⚠️  Optional secret for coverage reporting:"
   echo "   - CODECOV_TOKEN (sign up at codecov.io)"
@@ -1471,8 +1510,9 @@ Review and confirm:
 - ✅ Tests node versions 20, 22
 - ✅ Runs lint, format, spell, knip, test with coverage, build
 - ✅ Uploads coverage reports to Codecov (if CODECOV_TOKEN set)
-- ✅ If publishable: Has publish job with NPM_TOKEN
-- ✅ If publishable: Publish only runs when package.json version changes
+- ✅ If publishable: Has publish job with OIDC trusted publishing (recommended) or granular NPM_TOKEN
+- ✅ If publishable: Publish job has `permissions: id-token: write` for OIDC provenance
+- ✅ If publishable: Publish only runs when version is not yet on npm (handles first publish and version bumps)
 
 **Release Configuration** (if publishable):
 
@@ -1497,7 +1537,7 @@ Review and confirm:
 - ✅ .gitignore exists and excludes dist/, node_modules/
 - ✅ Repository is connected to GitHub
 - ✅ gh CLI is authenticated
-- ✅ If publishable: NPM_TOKEN secret is set
+- ✅ If publishable: OIDC trusted publishing configured on npmjs.com, or NPM_TOKEN (granular) secret is set
 
 **Documentation**:
 
@@ -1573,10 +1613,10 @@ Version: X.X.X
   - Tests on Node 20, 22
   - Runs lint, format, spell, test with coverage, build
   - Uploads coverage to Codecov (if token configured)
-  [- Auto-publishes to npm on main push (only when version changes)] - if publishable
+  [- Auto-publishes to npm on main push with provenance (when version not yet on npm)] - if publishable
 
 ⚠️  Next Steps:
-  1. [If publishable] Add NPM_TOKEN secret to GitHub repository
+  1. [If publishable] Set up npm publishing auth (OIDC trusted publishing recommended, or granular access token)
   2. [Optional] Set up Codecov:
      - Sign up at codecov.io
      - Add repository to Codecov
@@ -1602,15 +1642,32 @@ Version: X.X.X
 
 ### For Publishable Packages
 
-1. **NPM Token Required**: You must add `NPM_TOKEN` secret to GitHub repository settings:
+1. **npm Authentication (Post Dec 2025)**: Classic npm tokens have been permanently revoked. Choose one of these approaches:
+
+   **Option A - OIDC Trusted Publishing (Recommended)**:
 
    ```bash
-   # Get npm token from ~/.npmrc or create one:
-   npm token create
+   # No secrets needed! Configure on npmjs.com:
+   # 1. Go to package settings > Publishing Access > Trusted Publishing
+   # 2. Link your GitHub repository and workflow
+   # 3. Use --provenance flag when publishing for supply chain security
+   ```
+
+   **Option B - Granular Access Token (Fallback)**:
+
+   ```bash
+   # Create a granular token (classic tokens no longer work):
+   npm token create --token-type=granular
+   # Or create via npmjs.com: Settings > Access Tokens > Granular Access Token
+   # - Set package scope and read-write permissions
+   # - Max 90-day expiration for write tokens (must rotate before expiry)
+   # - Enable "Bypass 2FA" for CI/CD automation
 
    # Add to GitHub secrets:
    gh secret set NPM_TOKEN
    ```
+
+   **Important**: 2FA is now enforced by default for all publishing operations. For CI/CD, either use OIDC (which handles this automatically) or enable "Bypass 2FA" on your granular token.
 
 2. **Initial Version**: Start at `0.0.0` or `0.1.0`, let release-it handle versioning
 
@@ -1620,6 +1677,7 @@ Version: X.X.X
    - If tests pass AND version changed, automatically publishes
    - Version must be bumped in package.json for publish to trigger
    - Or use `pnpm release` for manual release with changelog and version bump
+   - With OIDC: publishes include provenance attestation for supply chain security
 
 ### For Internal Packages
 
@@ -1688,7 +1746,10 @@ pnpm knip
    - Check package.json scripts exist
 
 4. **Publishing fails**:
-   - Verify NPM_TOKEN secret is set
+   - If using OIDC: Verify trusted publishing is configured on npmjs.com for your GitHub repo/workflow
+   - If using granular token: Verify NPM_TOKEN secret is set and not expired (max 90 days for write tokens)
+   - Classic npm tokens no longer work (revoked Dec 2025) - migrate to OIDC or granular tokens
+   - Ensure 2FA bypass is enabled on your token for CI/CD, or use OIDC which handles 2FA automatically
    - Check npm package name is available
    - Verify publishConfig.access is correct
 
