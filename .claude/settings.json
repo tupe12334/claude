@@ -1,5 +1,14 @@
 {
   "permissions": {
-    "allow": ["WebFetch(domain:github.blog)"]
+    "allow": [
+      "WebFetch(domain:github.blog)",
+      "WebFetch(domain:github.blog)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(pnpm release:*)",
+      "Bash(git add:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)"
+    ]
   }
 }
