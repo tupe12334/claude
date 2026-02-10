@@ -9,7 +9,10 @@
       "Bash(git add:*)",
       "Bash(gh run list:*)",
       "Bash(gh run view:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(gh run watch:*)",
+      "WebSearch",
+      "WebFetch(domain:docs.npmjs.com)"
     ]
   }
 }
