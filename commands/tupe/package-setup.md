@@ -1379,6 +1379,206 @@ fi
 2. Use GitHub's license chooser: [choosealicense.com](https://choosealicense.com/)
 3. Update the `license` field in package.json to match
 
+### Step 5: Create README.md
+
+Create a comprehensive README file for the project. This should be the last file created, as it references tools, scripts, and configurations set up in earlier phases.
+
+Use the appropriate template based on the package type:
+
+**For publishable packages**:
+
+````bash
+if [ ! -f README.md ]; then
+  cat > README.md << 'EOF'
+# PACKAGE_NAME
+
+[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/PACKAGE_NAME.svg)](https://www.npmjs.com/package/PACKAGE_NAME)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+PACKAGE_DESC
+
+## Features
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+## Installation
+
+```bash
+pnpm add PACKAGE_NAME
+```
+
+## Usage
+
+```typescript
+import { hello } from 'PACKAGE_NAME'
+
+const greeting = hello('World')
+console.log(greeting) // Hello, World!
+```
+
+## API
+
+### `hello(name: string): string`
+
+Returns a greeting string for the given name.
+
+**Parameters:**
+
+| Parameter | Type     | Description          |
+| --------- | -------- | -------------------- |
+| `name`    | `string` | The name to greet    |
+
+**Returns:** `string` - The greeting message
+
+## Development
+
+### Prerequisites
+
+- Node.js >= 20.0.0
+- pnpm (latest version)
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/OWNER/REPO.git
+cd REPO
+
+# Install dependencies
+pnpm install
+
+# Build the project
+pnpm build
+
+# Run tests
+pnpm test
+```
+
+### Available Scripts
+
+| Script               | Description                        |
+| -------------------- | ---------------------------------- |
+| `pnpm build`         | Build TypeScript                   |
+| `pnpm dev`           | Build in watch mode                |
+| `pnpm test`          | Run tests                          |
+| `pnpm test:watch`    | Run tests in watch mode            |
+| `pnpm test:coverage` | Run tests with coverage            |
+| `pnpm lint`          | Check code quality                 |
+| `pnpm lint:fix`      | Fix linting issues                 |
+| `pnpm format`        | Format code                        |
+| `pnpm format:check`  | Check formatting                   |
+| `pnpm spell`         | Check spelling                     |
+| `pnpm knip`          | Find unused files and dependencies |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+## License
+
+[MIT](LICENSE)
+EOF
+  echo "✅ Created README.md"
+else
+  echo "ℹ️  README.md already exists"
+fi
+````
+
+**For internal/non-publishable packages**:
+
+````bash
+if [ ! -f README.md ]; then
+  cat > README.md << 'EOF'
+# PACKAGE_NAME
+
+[![CI](https://github.com/OWNER/REPO/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/REPO/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+PACKAGE_DESC
+
+## Features
+
+- Feature 1
+- Feature 2
+- Feature 3
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js >= 20.0.0
+- pnpm (latest version)
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/OWNER/REPO.git
+cd REPO
+
+# Install dependencies
+pnpm install
+
+# Build the project
+pnpm build
+
+# Run tests
+pnpm test
+```
+
+## Usage
+
+```typescript
+import { hello } from './src/index.js'
+
+const greeting = hello('World')
+console.log(greeting) // Hello, World!
+```
+
+### Available Scripts
+
+| Script               | Description                        |
+| -------------------- | ---------------------------------- |
+| `pnpm build`         | Build TypeScript                   |
+| `pnpm dev`           | Build in watch mode                |
+| `pnpm test`          | Run tests                          |
+| `pnpm test:watch`    | Run tests in watch mode            |
+| `pnpm test:coverage` | Run tests with coverage            |
+| `pnpm lint`          | Check code quality                 |
+| `pnpm lint:fix`      | Fix linting issues                 |
+| `pnpm format`        | Format code                        |
+| `pnpm format:check`  | Check formatting                   |
+| `pnpm spell`         | Check spelling                     |
+| `pnpm knip`          | Find unused files and dependencies |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
+## License
+
+[MIT](LICENSE)
+EOF
+  echo "✅ Created README.md"
+else
+  echo "ℹ️  README.md already exists"
+fi
+````
+
+**README Customization**:
+
+- Replace the `Features` section with actual package features
+- Replace the `Usage` and `API` sections with real examples from your package's API
+- Update badge URLs by replacing `OWNER/REPO` with your GitHub repository path
+- For publishable packages: add a Codecov badge once coverage reporting is configured:
+  ```markdown
+  [![codecov](https://codecov.io/gh/OWNER/REPO/badge.svg)](https://codecov.io/gh/OWNER/REPO)
+  ```
+- For publishable packages: document all exported functions, types, and interfaces in the `API` section
+
 ## Phase 10: Validation and Testing
 
 ### Step 1: Validate Configuration
@@ -1606,6 +1806,7 @@ Version: X.X.X
   - .gitignore (git exclusions)
   - CONTRIBUTING.md (contribution guidelines)
   - LICENSE (MIT license)
+  - README.md (project documentation)
   [- .release-it.json (releases)] - if publishable
   - .github/workflows/ci.yml (CI/CD with coverage reporting)
 
@@ -1655,17 +1856,18 @@ Version: X.X.X
      - Add CODECOV_TOKEN secret to GitHub
      - Add coverage badge to README.md
   3. Review and customize CONTRIBUTING.md for your project
-  4. Verify LICENSE file has correct copyright year and author
-  5. Test git hooks (make a commit to test pre-commit, try pushing to test pre-push)
-  6. Write your package code in src/
-  7. Add tests in `.spec.ts` files next to your logic files (DDD approach)
-  8. Maintain 80%+ code coverage (enforced by vitest thresholds)
-  9. View coverage reports locally: open coverage/index.html
-  10. Update package.json metadata (author, keywords, description, repository URL)
-  11. Add project-specific words to cspell.json
-  12. Run `pnpm knip` and review/remove unused files, dependencies, and exports
-  13. Push to GitHub to trigger CI with coverage reporting
-  [14. Run `pnpm release` to publish first version] - if publishable
+  4. Customize README.md with actual API usage examples and badges
+  5. Verify LICENSE file has correct copyright year and author
+  6. Test git hooks (make a commit to test pre-commit, try pushing to test pre-push)
+  7. Write your package code in src/
+  8. Add tests in `.spec.ts` files next to your logic files (DDD approach)
+  9. Maintain 80%+ code coverage (enforced by vitest thresholds)
+  10. View coverage reports locally: open coverage/index.html
+  11. Update package.json metadata (author, keywords, description, repository URL)
+  12. Add project-specific words to cspell.json
+  13. Run `pnpm knip` and review/remove unused files, dependencies, and exports
+  14. Push to GitHub to trigger CI with coverage reporting
+  [15. Run `pnpm release` to publish first version] - if publishable
 
 🚀 Ready to develop!
 ```
