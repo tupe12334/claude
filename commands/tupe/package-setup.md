@@ -120,7 +120,7 @@ Then ensure it has these essential fields:
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/OWNER/REPO"
+    "url": "git+https://github.com/OWNER/REPO.git"
   },
   "keywords": [],
   "author": "",
@@ -811,15 +811,16 @@ jobs:
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "Package: $PACKAGE_NAME@$CURRENT_VERSION"
 
-          # Check if this exact version exists on npm
-          PUBLISHED_VERSION=$(npm view "$PACKAGE_NAME@$CURRENT_VERSION" version 2>/dev/null || echo "")
-
-          if [ -z "$PUBLISHED_VERSION" ]; then
-            echo "Version $CURRENT_VERSION not found on npm, will publish"
-            echo "should_publish=true" >> $GITHUB_OUTPUT
-          else
-            echo "Version $CURRENT_VERSION already published, skipping"
+          # Check the time field which includes all historically published versions,
+          # even ones that were later unpublished (npm blocks re-publishing those).
+          # This is critical for transferred packages where the previous owner may
+          # have published and unpublished versions that are invisible to `npm view @version`.
+          if npm view "$PACKAGE_NAME" time --json 2>/dev/null | grep -q "\"$CURRENT_VERSION\""; then
+            echo "Version $CURRENT_VERSION was previously published, skipping"
             echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "Version $CURRENT_VERSION never published, will publish"
+            echo "should_publish=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Install pnpm
@@ -860,10 +861,12 @@ Since December 2025, npm classic tokens have been permanently revoked. The workf
    {
      "repository": {
        "type": "git",
-       "url": "https://github.com/OWNER/REPO"
+       "url": "git+https://github.com/OWNER/REPO.git"
      }
    }
    ```
+
+   **Important**: Use the `git+https://...git` format. npm will auto-correct other formats with a warning during publish.
 
 2. **Configure trusted publishing on npmjs.com**:
    - Go to your package settings on npmjs.com
@@ -920,9 +923,10 @@ Then update the workflow to use token auth instead:
 
 The publish job checks the npm registry to decide whether to publish:
 
-- Queries npm for the exact version in package.json
-- Publishes if the version doesn't exist on npm (new version or first publish)
-- Skips all publish steps if the version is already published
+- Queries npm's `time` field which includes **all historically published versions**, even ones that were later unpublished
+- This is critical for **transferred package names** where the previous owner may have published and unpublished versions — npm permanently blocks those version numbers, but `npm view @version` won't find them
+- Publishes if the version was never published (new version or first publish)
+- Skips all publish steps if the version was ever published (current or historical)
 - Handles first-time publishes automatically (package not yet on npm)
 - Prevents accidental duplicate publishes of the same version
 
@@ -930,6 +934,15 @@ This means you **must bump the version** in package.json before merging to main 
 
 1. Manually edit package.json and change the version
 2. Use `pnpm release` which handles version bumping, changelog, and git tags automatically
+
+**For transferred package names**: Check which versions were historically published before choosing your initial version:
+
+```bash
+# View all historically published versions (including unpublished ones)
+npm view PACKAGE_NAME time --json
+```
+
+Pick a version higher than any previously used version number.
 
 **For Internal/Non-Publishable Packages** (`.github/workflows/ci.yml`):
 
@@ -1893,7 +1906,7 @@ Version: X.X.X
 
    **Fallback** (private packages / self-hosted runners): Create a granular access token on npmjs.com (max 90-day expiration for write), add as `NPM_TOKEN` GitHub secret, and use `registry-url` + `NODE_AUTH_TOKEN` in the workflow.
 
-2. **Initial Version**: Start at `0.0.0` or `0.1.0`, let release-it handle versioning
+2. **Initial Version**: Start at `0.0.0` or `0.1.0`, let release-it handle versioning. **For transferred package names**: check `npm view PACKAGE_NAME time --json` to see all historically published versions (including unpublished ones) and pick a version higher than any previously used number
 
 3. **Publishing Workflow**:
    - Develop and commit to feature branches
@@ -1971,7 +1984,7 @@ pnpm knip
 
 4. **Publishing fails**:
    - Verify OIDC trusted publishing is configured on npmjs.com (Settings > Trusted Publisher > GitHub Actions)
-   - Verify `repository.url` in package.json matches your GitHub repo URL (required for provenance verification)
+   - Verify `repository.url` in package.json uses `git+https://...git` format (required for provenance verification)
    - Verify `npm install -g npm@latest` step exists (OIDC auth requires npm >= 11.5.1)
    - Verify publish job has `permissions: id-token: write`
    - Do NOT use `registry-url` in `actions/setup-node` (overrides OIDC with token-based auth)
@@ -1979,12 +1992,20 @@ pnpm knip
    - Check npm package name is available
    - Verify publishConfig.access is correct
 
-5. **Tests fail**:
+5. **Publishing fails with "Cannot publish over previously published version"**:
+   - This typically happens with **transferred package names** where the previous owner published and unpublished versions
+   - npm permanently blocks re-using any version that was ever published, even after unpublishing
+   - `npm view PACKAGE@VERSION` won't find unpublished versions, but `npm publish` still rejects them
+   - **Fix**: Run `npm view PACKAGE_NAME time --json` to see ALL historically published versions
+   - Choose a version number higher than any previously used version
+   - The CI version check uses the `time` field to detect this, but if you set the version manually, check first
+
+6. **Tests fail**:
    - Check vitest.config.ts exists
    - Verify test files match pattern `*.spec.ts`
    - Run locally first: `pnpm test`
 
-6. **Knip reports false positives**:
+7. **Knip reports false positives**:
    - Add runtime-only dependencies to `ignoreDependencies` in knip.json
    - Update `entry` array if you have additional entry points
    - Check if imports are dynamic (use string literals for better detection)
